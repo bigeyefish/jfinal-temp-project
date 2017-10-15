@@ -1,6 +1,7 @@
 package com.wsy;
 
 import com.jfinal.config.*;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -49,6 +50,7 @@ public class MyConfig extends JFinalConfig {
 
     public void configInterceptor(Interceptors me) {
         me.addGlobalActionInterceptor(new AuthInterceptor());
+        me.add(new GET());
     }
 
     public void configHandler(Handlers me) {

@@ -1,5 +1,7 @@
 package com.wsy.service;
 
+import com.jfinal.aop.Clear;
+import com.jfinal.ext.interceptor.GET;
 import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.db.User;
 
@@ -13,6 +15,7 @@ public class UserService {
      * @param userName 用户名
      * @return
      */
+    @Clear(GET.class)
     public User getUserByName(String userName) {
         return User.dao.findFirst(Db.getSqlPara("findUserByName", userName));
     }
