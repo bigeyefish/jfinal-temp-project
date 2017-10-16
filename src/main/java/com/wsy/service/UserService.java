@@ -17,6 +17,6 @@ public class UserService {
      */
     @Clear(GET.class)
     public User getUserByName(String userName) {
-        return User.dao.findFirst(Db.getSqlPara("findUserByName", userName));
+        return User.dao.findFirst(Db.getSqlPara("index.findUserByName", userName));
     }
 }

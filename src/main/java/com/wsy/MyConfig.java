@@ -8,6 +8,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model.db.User;
@@ -42,10 +43,12 @@ public class MyConfig extends JFinalConfig {
         me.add(dp);
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
         arp.setDialect(new MysqlDialect());
-        arp.setBaseSqlTemplatePath(PathKit.getRootClassPath());
-        arp.addSqlTemplate("temp.sql");
+        arp.setBaseSqlTemplatePath(PathKit.getRootClassPath() + "/sql");
+        arp.addSqlTemplate("sql/all.sql");
         arp.addMapping("user", User.class);
         me.add(arp);
+
+        me.add(new EhCachePlugin());
     }
 
     public void configInterceptor(Interceptors me) {
