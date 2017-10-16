@@ -20,4 +20,16 @@ public class Result {
         this.msg = msg;
         this.data = data;
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public Object getData() {
+        return data;
+    }
 }

@@ -3,7 +3,7 @@ package com.wsy.service;
 import com.jfinal.aop.Clear;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.plugin.activerecord.Db;
-import com.wsy.model.db.User;
+import com.wsy.model.User;
 
 /**
  * Created by Lenovo on 2017/10/15.

@@ -2,6 +2,7 @@ package com.wsy;
 
 import com.jfinal.config.*;
 import com.jfinal.ext.interceptor.GET;
+import com.jfinal.json.FastJsonFactory;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -11,7 +12,7 @@ import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
 import com.wsy.interceptor.AuthInterceptor;
-import com.wsy.model.db.User;
+import com.wsy.model._MappingKit;
 import com.wsy.routes.AdminRoutes;
 import com.wsy.routes.FrontRoutes;
 
@@ -23,6 +24,10 @@ public class MyConfig extends JFinalConfig {
         // 第一次使用use加载的配置将成为主配置，可以通过PropKit.get(...)直接取值
         PropKit.use("config.properties");
         me.setDevMode(PropKit.getBoolean("devMode"));
+
+        me.setEncoding("utf-8");
+        me.setJsonFactory(new FastJsonFactory());
+
     }
 
     public void configRoute(Routes me) {
@@ -44,8 +49,8 @@ public class MyConfig extends JFinalConfig {
         ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
         arp.setDialect(new MysqlDialect());
         arp.setBaseSqlTemplatePath(PathKit.getRootClassPath() + "/sql");
-        arp.addSqlTemplate("sql/all.sql");
-        arp.addMapping("user", User.class);
+        arp.addSqlTemplate("all.sql");
+        _MappingKit.mapping(arp);
         me.add(arp);
 
         me.add(new EhCachePlugin());
