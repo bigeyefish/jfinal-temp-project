@@ -13,6 +13,7 @@ import com.wsy.util.ResultFactory;
 import java.util.Date;
 
 /**
+ * the controller witch relationship on user
  * Created by Lenovo on 2017/10/13.
  */
 public class UserController extends Controller{
