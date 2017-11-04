@@ -9,6 +9,8 @@ import com.wsy.model.User;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 import com.wsy.util.ResultFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 
@@ -19,6 +21,7 @@ import java.util.Date;
 public class UserController extends Controller{
 
     private UserService userService = new UserService();
+    public static final Logger log = LogManager.getLogger(UserController.class);
 
     /**
      * 登录
@@ -29,11 +32,13 @@ public class UserController extends Controller{
         User user = userService.getUserByName(getPara("userName"));
 
         if (null != user && user.get("password").equals(getPara("password"))) {
+            log.warn("用户[{}]登录成功", user.getUserName());
             setSessionAttr("user", user);
             user.setLastLogin(new Date()).update();
             renderJson(ResultFactory.success(null));
             return;
         }
+        log.warn("用户[{}]登录失败", getPara("userName"));
         renderJson(ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL, null));
     }
 }
