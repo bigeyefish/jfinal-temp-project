@@ -6,6 +6,8 @@ import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.User;
 import com.wsy.util.LogUtil;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2017/10/15.
  */
@@ -24,5 +26,14 @@ public class UserService {
             LogUtil.LogType.errorLog.error(e.getMessage());
             return null;
         }
+    }
+
+    /**
+     * 根据家庭编号查询家庭成员
+     * @param familyId
+     * @return
+     */
+    public List<User> findUsersByFamily(int familyId) {
+        return User.dao.find(Db.getSqlPara("index.findUsersByFamily", familyId));
     }
 }

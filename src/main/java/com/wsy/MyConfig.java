@@ -15,6 +15,7 @@ import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model._MappingKit;
 import com.wsy.routes.AdminRoutes;
 import com.wsy.routes.FrontRoutes;
+import com.wsy.schedule.ScheduleManager;
 
 /**
  * Created by Lenovo on 2017/10/13.
@@ -63,5 +64,11 @@ public class MyConfig extends JFinalConfig {
 
     public void configHandler(Handlers me) {
 //        me.add(new ResourceHandler());
+    }
+
+    @Override
+    public void afterJFinalStart() {
+        super.afterJFinalStart();
+        ScheduleManager.init();
     }
 }

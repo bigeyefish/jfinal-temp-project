@@ -21,12 +21,23 @@
 				<TimeBasedTriggeringPolicy />
 			</Policies>
 		</RollingFile>
+		<RollingFile name="task_log" fileName="log/task.log" filePattern="log/history/task-%d{yyyyMMdd}.log">
+			<PatternLayout>
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS},%m%n</Pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
 	</appenders>
 	<loggers>
 		<Root level="info">
 			<AppenderRef ref="system_log" />
 			<AppenderRef ref="Console" />
 		</Root>
+		<AsyncLogger name="task" level="info" additivity="false">
+			<AppenderRef ref="task_log"/>
+		</AsyncLogger>
 		<AsyncLogger name="error" level="error" additivity="false">
 			<AppenderRef ref="error_log"/>
 			<AppenderRef ref="Console" />
