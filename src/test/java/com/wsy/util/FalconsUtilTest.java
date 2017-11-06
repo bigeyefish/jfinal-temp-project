@@ -5,7 +5,7 @@ import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+//import com.wsy.model.Interviewer;
 
 /**
  * Created by sanyihwang on 2017/11/6.

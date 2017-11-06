@@ -63,4 +63,13 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("last_login");
 	}
 
+	public M setFamilyId(java.lang.Integer familyId) {
+		set("family_id", familyId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getFamilyId() {
+		return getInt("family_id");
+	}
+
 }
