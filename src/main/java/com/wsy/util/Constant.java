@@ -15,11 +15,13 @@ public class Constant {
         public static final int SUCCESS = 0;
         public static final int ERROR = -1;
         public static final int LOGIN_FAIL = 1001;
+        public static final int DECODE_CARD_ERR = 1002;
     }
 
     static {
         codeMap.put(ResultCode.SUCCESS, "success");
         codeMap.put(ResultCode.ERROR, "system error");
         codeMap.put(ResultCode.LOGIN_FAIL, "用户名或密码错误");
+        codeMap.put(ResultCode.DECODE_CARD_ERR, "解析电子卡包数据异常");
     }
 }
