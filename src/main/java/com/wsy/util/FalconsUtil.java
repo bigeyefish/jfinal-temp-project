@@ -8,8 +8,6 @@ import com.wsy.model.biz.Result;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 猎鹰平台
@@ -22,19 +20,22 @@ public class FalconsUtil {
      * @param interviewer
      */
     public static Result reportData(Interviewer interviewer) {
-        Map<String, String> map = new HashMap<>();
+        JSONObject map = new JSONObject();
         map.put("name", interviewer.getName());
-        map.put("sex", "男");
-        map.put("age", "20");
+//        map.put("sex", "男");
+//        map.put("age", "20");
         map.put("card", interviewer.getIdNum());
         map.put("phone", interviewer.getTel());
         map.put("time", DateKit.toStr(new Date()));
         map.put("token", PropKit.get("falcons.token"));
         try {
             System.out.println(JSON.toJSONString(map));
-            String result = HttpUtil.postJson(PropKit.get("falcons.url"), JSON.toJSONString(map));
+            String result = HttpUtil.postJson(PropKit.get("falcons.url"), map);
             JSONObject jsonObject = (JSONObject) JSON.parse(result);
-            return new Result(Integer.parseInt((String)jsonObject.get("code")), (String)jsonObject.get("message"), null);
+            if (null != jsonObject.get("code")) {
+                return new Result(Integer.parseInt((String)jsonObject.get("code")), (String)jsonObject.get("message"), null);
+            }
+            return ResultFactory.success(null);
         } catch (IOException e) {
             e.printStackTrace();
             return ResultFactory.error(null);

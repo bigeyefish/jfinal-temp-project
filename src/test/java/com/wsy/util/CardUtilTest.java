@@ -1,13 +1,14 @@
 package com.wsy.util;
 
 import com.jfinal.kit.PropKit;
+import com.wsy.model.Interviewer;
 
 /**
  * Created by sanyihwang on 2017/11/6.
  */
 public class CardUtilTest {
 
-    private String jsonStr = "{\"auth\":0,\"codeId\":\"367a7615323d4564\",\"idNum\":\"842e260179e7b2203026d85cca94a59220fc9ca45afd1dce6da663e057bf2d887ba758e4c452a8b9562e47c9ffec7d7b\",\"name\":\"1c4ec211686e4f8fb4ebf7e681985fb4bc3745526cfbb295b7b71f62fdac33c6\",\"qrType\":1,\"telephone\":\"50f384d8f2a6d977f4834098e4d0a7103c0434f05c25365c4c8c7c8b924dcca9\",\"url\":\"https://app.mycards.net.cn:8443/mycards/info/getInfo\"}";
+    private String jsonStr = "{\"auth\":0,\"codeId\":\"102abad676fc42e1\",\"idNum\":\"f701b4a895076300c16cc16bb0985c5cf80a2b789ac2b4261b2f62f24f60d3db71482c1a77d9f88415a751ff3c12a39c\",\"name\":\"41204b3e2b58058cd0dd1122b03b517e77bc846a1ddcaf976a09d47ab6340d00\",\"qrType\":1,\"telephone\":\"bfab5ce110930a4b9a6dd870bf86e6c24915e151038c55becd4bd748d9ebb49e\",\"url\":\"https://app.mycards.net.cn:8443/mycards/info/getInfo\"}";
 
     static {
         PropKit.use("config.properties");

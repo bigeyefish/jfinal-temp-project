@@ -1,8 +1,11 @@
 package com.wsy.util;
 
 import com.jfinal.kit.PropKit;
+import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 import org.junit.Test;
+
+//import com.wsy.model.Interviewer;
 
 /**
  * Created by sanyihwang on 2017/11/6.

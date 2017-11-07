@@ -1,5 +1,6 @@
 package com.wsy.util;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -15,13 +16,13 @@ import java.io.IOException;
  */
 public class HttpUtil {
 
-    public static String postJson(String url, String json) throws IOException {
+    public static String postJson(String url, JSONObject jsonObj) throws IOException {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
         post.addHeader("content-type", "application/json");
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5 * 60 * 1000).setConnectTimeout(5 * 60 * 1000).build();//设置请求和传输超时时间
         post.setConfig(requestConfig);
-        post.setEntity(new StringEntity(json, "UTF-8"));
+        post.setEntity(new StringEntity(jsonObj.toString(), "UTF-8"));
         HttpResponse response = httpClient.execute(post);
         String result = null;
         if (response != null) {

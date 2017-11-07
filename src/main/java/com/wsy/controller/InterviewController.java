@@ -28,4 +28,11 @@ public class InterviewController extends Controller {
     public void checkIn() {
         renderJson(interviewService.checkIn(getPara("data")));
     }
+
+    /**
+     * 查询访客记录
+     */
+    public void queryInterviewerById() {
+        renderJson(interviewService.queryInterviewerById(getPara("certId"), getParaToInt("page", 1), getParaToInt("size", 10)));
+    }
 }
