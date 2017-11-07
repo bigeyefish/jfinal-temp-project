@@ -5,6 +5,7 @@ import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
+import com.wsy.model.Interviewer;
 import com.wsy.service.InterviewService;
 
 
@@ -21,12 +22,21 @@ public class InterviewController extends Controller {
     }
 
     /**
-     * 访客登记
+     * 电子卡包访客登记
      */
     @Clear(GET.class)
     @Before(POST.class)
-    public void checkIn() {
-        renderJson(interviewService.checkIn(getPara("data")));
+    public void checkInCard() {
+        renderJson(interviewService.checkInCard(getPara("data")));
+    }
+
+    /**
+     * NFC手机访客登记
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void checkInNFC() {
+        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64")));
     }
 
     /**

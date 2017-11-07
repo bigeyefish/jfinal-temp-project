@@ -54,4 +54,22 @@ public abstract class BaseInterviewer<M extends BaseInterviewer<M>> extends Mode
 		return get("create_time");
 	}
 
+	public M setSex(java.lang.String sex) {
+		set("sex", sex);
+		return (M)this;
+	}
+
+	public java.lang.String getSex() {
+		return getStr("sex");
+	}
+
+	public M setAge(java.lang.Integer age) {
+		set("age", age);
+		return (M)this;
+	}
+
+	public java.lang.Integer getAge() {
+		return getInt("age");
+	}
+
 }

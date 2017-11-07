@@ -2,6 +2,7 @@ package com.wsy.routes;
 
 import com.jfinal.config.Routes;
 import com.wsy.controller.IndexController;
+import com.wsy.controller.InterviewController;
 
 /**
  * 前端路由
@@ -10,5 +11,6 @@ import com.wsy.controller.IndexController;
 public class FrontRoutes extends Routes {
     public void config() {
         add("/", IndexController.class);
+        add("/api/interview", InterviewController.class);
     }
 }

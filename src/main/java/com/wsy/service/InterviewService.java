@@ -16,26 +16,55 @@ import java.util.Date;
 public class InterviewService {
 
     /**
-     * 登记访客
+     * 电子卡包登记访客
      * @param jsonStr
      * @return
      */
-    public Result checkIn(String jsonStr) {
-        // 解析电子卡包数据
-        Interviewer interviewer = CardUtil.decodeCardInfo(jsonStr);
-        if (null == interviewer) {
-            return ResultFactory.createResult(Constant.ResultCode.DECODE_CARD_ERR, null);
+    public Result checkInCard(String jsonStr) {
+        if (null == jsonStr) {
+            return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
+        }
+        try {
+            // 解析电子卡包数据
+            Interviewer interviewer = CardUtil.decodeCardInfo(jsonStr);
+            if (null == interviewer) {
+                return ResultFactory.createResult(Constant.ResultCode.DECODE_CARD_ERR, null);
+            }
+            interviewer.setCreateTime(new Date());
+            // 存储数据库
+            interviewer.save();
+            return ResultFactory.success(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultFactory.error(e.getMessage());
+        }
+    }
+
+    /**
+     * NFC手机登记访客
+     * @param interviewer
+     * @param imgBase64
+     * @return
+     */
+    public Result checkInNFC(Interviewer interviewer, String imgBase64) {
+        if (null == interviewer || null == imgBase64) {
+            return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
         interviewer.setCreateTime(new Date());
-        // 存储数据库
-        interviewer.save();
-        // 调用猎鹰平台
-        Result result = FalconsUtil.reportData(interviewer);
-        if (result.getCode() == 0) {
-            return ResultFactory.success(null);
+        try {
+            // 存储数据库
+            interviewer.save();
+            // 调用猎鹰平台
+            Result result = FalconsUtil.reportData(interviewer, imgBase64);
+            if (result.getCode() == 0) {
+                return ResultFactory.success(null);
+            }
+            result.setData("调用猎鹰平台异常");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultFactory.error(e.getMessage());
         }
-        result.setData("调用猎鹰平台异常");
-        return result;
     }
 
     /**

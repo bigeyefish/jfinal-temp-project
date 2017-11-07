@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.wsy</groupId>
-    <artifactId>home-manager</artifactId>
+    <artifactId>interview-manager</artifactId>
     <packaging>war</packaging>
-    <name>home-manager</name>
+    <name>interview-manager</name>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -95,9 +95,17 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.mycards</groupId>
+            <artifactId>qrcode</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/parser-1.0-jar-with-dependencies.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <build>
+        <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -116,7 +124,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <warName>home-manager</warName>
+                    <warName>interview-manager</warName>
                     <archiveClasses>true</archiveClasses>
                     <webResources>
                         <resource>
