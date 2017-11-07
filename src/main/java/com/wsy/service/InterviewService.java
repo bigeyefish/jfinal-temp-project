@@ -1,6 +1,5 @@
 package com.wsy.service;
 
-import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 import com.wsy.util.CardUtil;
 import com.wsy.util.Constant;

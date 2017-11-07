@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.ext.kit.DateKit;
 import com.jfinal.kit.PropKit;
-import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 
 import java.io.IOException;

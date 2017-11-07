@@ -3,7 +3,6 @@ import cn.net.mycards.qrcode.Parser;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
-import com.wsy.model.Interviewer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
