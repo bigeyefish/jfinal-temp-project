@@ -5,6 +5,7 @@ import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
+import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model.User;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
@@ -26,14 +27,14 @@ public class UserController extends Controller{
     /**
      * 登录
      */
-    @Clear(GET.class)
+    @Clear({GET.class, AuthInterceptor.class})
     @Before(POST.class)
     public void login() {
         User user = userService.getUserByName(getPara("userName"));
 
         if (null != user && user.get("password").equals(getPara("password"))) {
             log.warn("用户[{}]登录成功", user.getUserName());
-            setSessionAttr("user", user);
+            setSessionAttr("userId", user.getId());
             user.setLastLogin(new Date()).update();
             renderJson(ResultFactory.success(null));
             return;
