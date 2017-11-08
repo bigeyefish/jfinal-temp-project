@@ -63,4 +63,22 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("last_login");
 	}
 
+	public M setIdNum(java.lang.String idNum) {
+		set("id_num", idNum);
+		return (M)this;
+	}
+
+	public java.lang.String getIdNum() {
+		return getStr("id_num");
+	}
+
+	public M setTel(java.lang.String tel) {
+		set("tel", tel);
+		return (M)this;
+	}
+
+	public java.lang.String getTel() {
+		return getStr("tel");
+	}
+
 }

@@ -72,4 +72,13 @@ public abstract class BaseInterviewer<M extends BaseInterviewer<M>> extends Mode
 		return getInt("age");
 	}
 
+	public M setCreateBy(java.lang.Integer createBy) {
+		set("create_by", createBy);
+		return (M)this;
+	}
+
+	public java.lang.Integer getCreateBy() {
+		return getInt("create_by");
+	}
+
 }

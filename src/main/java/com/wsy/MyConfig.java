@@ -11,6 +11,7 @@ import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
+import com.wsy.Handler.ResourceHandler;
 import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model._MappingKit;
 import com.wsy.routes.AdminRoutes;
@@ -62,6 +63,6 @@ public class MyConfig extends JFinalConfig {
     }
 
     public void configHandler(Handlers me) {
-//        me.add(new ResourceHandler());
+        me.add(new ResourceHandler());
     }
 }

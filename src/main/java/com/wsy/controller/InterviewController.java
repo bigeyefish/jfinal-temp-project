@@ -6,6 +6,7 @@ import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.wsy.model.Interviewer;
+import com.wsy.model.User;
 import com.wsy.service.InterviewService;
 
 
@@ -27,7 +28,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInCard() {
-        renderJson(interviewService.checkInCard(getPara("data")));
+        renderJson(interviewService.checkInCard(getPara("data"), ((User)getSessionAttr("user")).getId()));
     }
 
     /**
@@ -36,7 +37,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInNFC() {
-        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64")));
+        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64"), ((User)getSessionAttr("user")).getId()));
     }
 
     /**

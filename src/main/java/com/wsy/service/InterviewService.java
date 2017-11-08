@@ -20,7 +20,7 @@ public class InterviewService {
      * @param jsonStr
      * @return
      */
-    public Result checkInCard(String jsonStr) {
+    public Result checkInCard(String jsonStr, int userId) {
         if (null == jsonStr) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
@@ -31,6 +31,7 @@ public class InterviewService {
                 return ResultFactory.createResult(Constant.ResultCode.DECODE_CARD_ERR, null);
             }
             interviewer.setCreateTime(new Date());
+            interviewer.setCreateBy(userId);
             // 存储数据库
             interviewer.save();
             return ResultFactory.success(null);
@@ -46,11 +47,12 @@ public class InterviewService {
      * @param imgBase64
      * @return
      */
-    public Result checkInNFC(Interviewer interviewer, String imgBase64) {
+    public Result checkInNFC(Interviewer interviewer, String imgBase64, int userId) {
         if (null == interviewer || null == imgBase64) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
         interviewer.setCreateTime(new Date());
+        interviewer.setCreateBy(userId);
         try {
             // 存储数据库
             interviewer.save();
@@ -74,7 +76,12 @@ public class InterviewService {
      * @param size 每页数量
      * @return
      */
-    public Page<Interviewer> queryInterviewerById(String certId, int page, int size) {
-        return Interviewer.dao.paginate(page, size, "select *", "from interviewer where id_num = ?", certId);
+    public Result queryInterviewerById(String certId, int page, int size) {
+        try {
+            return ResultFactory.success(Interviewer.dao.paginate(page, size, "select *", "from interviewer where id_num = ?", certId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultFactory.error(e.getMessage());
+        }
     }
 }
