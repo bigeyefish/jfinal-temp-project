@@ -1,28 +1,81 @@
 package com.wsy.service;
 
-import com.jfinal.aop.Clear;
-import com.jfinal.ext.interceptor.GET;
-import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.kit.Kv;
+import com.jfinal.kit.StrKit;
 import com.wsy.model.User;
-import com.wsy.util.LogUtil;
+import com.wsy.model.biz.Result;
+import com.wsy.util.Constant;
+import com.wsy.util.EncodeUtil;
+import com.wsy.util.ResultFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Date;
 
 /**
  * Created by Lenovo on 2017/10/15.
  */
 public class UserService {
 
+    public static final Logger log = LogManager.getLogger(UserService.class);
+
+
     /**
-     * 根据用户名获取用户信息
+     * 登陆
      * @param userName 用户名
+     * @param password 密码
      * @return
      */
-    @Clear(GET.class)
-    public User getUserByName(String userName) {
-        try {
-            return User.dao.findFirst(Db.getSqlPara("index.findUserByName", userName));
-        } catch (Exception e) {
-            LogUtil.LogType.errorLog.error(e.getMessage());
-            return null;
+    public Result logIn(String userName, String password) {
+        if (StrKit.isBlank(userName) || StrKit.isBlank(password)) {
+            return ResultFactory.createResult(Constant.ResultCode.LEAD_PARAM);
         }
+        String passMD5Str = EncodeUtil.getMD5(Constant.MD5_FRE + password.trim());
+        if (null == passMD5Str) {
+            return ResultFactory.createResult(Constant.ResultCode.MD5_ERR);
+        }
+        User user = User.dao.findFirst("select * from user t where t.user_name = ? and t.password = ?", userName, passMD5Str);
+        if (null != user) {
+            log.warn("用户[{}]登录成功", userName);
+            user.setLastLogin(new Date()).update();
+            Kv kv = Kv.by("id", user.getId()).set("userName", user.getUserName()).set("nickName", user.getNickName());
+            return ResultFactory.success(kv);
+        }
+        log.warn("用户[{}]登录失败", userName);
+        return ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL);
+    }
+
+    /**
+     * 修改密码
+     * @param userId 用户id
+     * @param oldPass 旧密码
+     * @param newPass 新密码
+     * @return
+     */
+    public Result modifyPassword(int userId, String oldPass, String newPass) {
+        if (null == oldPass || null == newPass) {
+            return ResultFactory.createResult(Constant.ResultCode.LEAD_PARAM);
+        }
+        if (newPass.trim().length() < 6 || newPass.trim().length() > 16) {
+            return ResultFactory.createResult(Constant.ResultCode.PASSWD_LENGTH_ERR);
+        }
+
+        String oldPassMD5Str = EncodeUtil.getMD5(Constant.MD5_FRE + oldPass.trim());
+        if (null == oldPassMD5Str) {
+            return ResultFactory.createResult(Constant.ResultCode.MD5_ERR);
+        }
+
+        User user = User.dao.findFirst("select * from user t where t.id = ? and t.password = ?", userId, oldPassMD5Str);
+        if (null == user) {
+            return ResultFactory.createResult(Constant.ResultCode.PASSWD_INCORRECT);
+        }
+
+        String newPassMD5Str = EncodeUtil.getMD5(Constant.MD5_FRE + newPass.trim());
+        if (null == newPassMD5Str) {
+            return ResultFactory.createResult(Constant.ResultCode.MD5_ERR);
+        }
+
+        user.setPassword(newPassMD5Str).update();
+        return ResultFactory.success(null);
     }
 }

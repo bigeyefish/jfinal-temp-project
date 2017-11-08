@@ -34,4 +34,8 @@ public class ResultFactory {
     public static Result createResult(int code, Object data) {
         return new Result(code, Constant.codeMap.get(code), data);
     }
+
+    public static Result createResult(int code) {
+        return createResult(code, null);
+    }
 }

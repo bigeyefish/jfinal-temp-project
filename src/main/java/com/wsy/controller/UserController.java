@@ -5,15 +5,11 @@ import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
+import com.jfinal.kit.Kv;
 import com.wsy.interceptor.AuthInterceptor;
-import com.wsy.model.User;
+import com.wsy.model.biz.Result;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
-import com.wsy.util.ResultFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.Date;
 
 /**
  * the controller witch relationship on user
@@ -22,7 +18,6 @@ import java.util.Date;
 public class UserController extends Controller{
 
     private UserService userService = new UserService();
-    public static final Logger log = LogManager.getLogger(UserController.class);
 
     /**
      * 登录
@@ -30,16 +25,24 @@ public class UserController extends Controller{
     @Clear({GET.class, AuthInterceptor.class})
     @Before(POST.class)
     public void login() {
-        User user = userService.getUserByName(getPara("userName"));
-
-        if (null != user && user.get("password").equals(getPara("password"))) {
-            log.warn("用户[{}]登录成功", user.getUserName());
-            setSessionAttr("userId", user.getId());
-            user.setLastLogin(new Date()).update();
-            renderJson(ResultFactory.success(null));
-            return;
+        Result result = userService.logIn(getPara("userName"), getPara("password"));
+        if (result.getCode() == Constant.ResultCode.SUCCESS) {
+            setSessionAttr("userId", ((Kv) result.getData()).get("id"));
+        } else {
+            removeSessionAttr("userId");
         }
-        log.warn("用户[{}]登录失败", getPara("userName"));
-        renderJson(ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL, null));
+        renderJson(result);
+    }
+
+    /**
+     * 修改密码
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void modifyPassword() {
+        String oldPass = getPara("oldPass");
+        String newPass = getPara("newPass");
+        Integer userId = getSessionAttr("userId");
+        renderJson(userService.modifyPassword(userId, oldPass, newPass));
     }
 }
