@@ -6,10 +6,14 @@ import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.kit.Kv;
+import com.jfinal.kit.PropKit;
+import com.jfinal.kit.StrKit;
 import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model.biz.Result;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
+import com.wsy.util.ResultFactory;
+import com.wsy.util.TokenUtil;
 
 /**
  * the controller witch relationship on user
@@ -25,11 +29,17 @@ public class UserController extends Controller{
     @Clear({GET.class, AuthInterceptor.class})
     @Before(POST.class)
     public void login() {
-        Result result = userService.logIn(getPara("userName"), getPara("password"));
+        Result result = ResultFactory.createResult(Constant.ResultCode.FIRST_LOGIN);
+        if (StrKit.notBlank(getPara("userName")) && StrKit.notBlank(getPara("password"))) {
+            result = userService.logIn(getPara("userName"), getPara("password"));
+        } else if (StrKit.notBlank(getCookie("token"))) {
+            result = userService.logIn(getCookie("token"));
+        }
         if (result.getCode() == Constant.ResultCode.SUCCESS) {
-            setSessionAttr("userId", ((Kv) result.getData()).get("id"));
+            Kv kv = ((Kv) result.getData());
+            setCookie("token", TokenUtil.generateToken(kv.getInt("id"), kv.getStr("userName")), PropKit.getInt("token.timeout"), true);
         } else {
-            removeSessionAttr("userId");
+            removeCookie("token");
         }
         renderJson(result);
     }

@@ -18,10 +18,11 @@ public class Constant {
         public static final int ERROR = -1;
         public static final int LOGIN_FAIL = 1001;
         public static final int HAVE_NOT_LOGIN = 1002;
-        public static final int LEAD_PARAM = 1003;
+        public static final int LEAK_PARAM = 1003;
         public static final int PASSWD_INCORRECT = 1004;
         public static final int PASSWD_LENGTH_ERR = 1005;
         public static final int MD5_ERR = 1006;
+        public static final int FIRST_LOGIN = 1007;
     }
 
     static {
@@ -29,9 +30,10 @@ public class Constant {
         codeMap.put(ResultCode.ERROR, "system error");
         codeMap.put(ResultCode.LOGIN_FAIL, "用户名或密码错误");
         codeMap.put(ResultCode.HAVE_NOT_LOGIN, "用户未登陆");
-        codeMap.put(ResultCode.LEAD_PARAM, "缺少参数");
+        codeMap.put(ResultCode.LEAK_PARAM, "缺少参数");
         codeMap.put(ResultCode.PASSWD_INCORRECT, "密码错误");
         codeMap.put(ResultCode.PASSWD_LENGTH_ERR, "密码长度在6-16之间");
         codeMap.put(ResultCode.MD5_ERR, "MD5加密异常");
+        codeMap.put(ResultCode.FIRST_LOGIN, "首次登陆");
     }
 }

@@ -63,4 +63,112 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return get("last_login");
 	}
 
+	public M setFamilyId(java.lang.Integer familyId) {
+		set("family_id", familyId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getFamilyId() {
+		return getInt("family_id");
+	}
+
+	public M setSex(java.lang.Boolean sex) {
+		set("sex", sex);
+		return (M)this;
+	}
+
+	public java.lang.Boolean getSex() {
+		return get("sex");
+	}
+
+	public M setAvatar(java.lang.String avatar) {
+		set("avatar", avatar);
+		return (M)this;
+	}
+
+	public java.lang.String getAvatar() {
+		return getStr("avatar");
+	}
+
+	public M setMobile(java.lang.String mobile) {
+		set("mobile", mobile);
+		return (M)this;
+	}
+
+	public java.lang.String getMobile() {
+		return getStr("mobile");
+	}
+
+	public M setEmail(java.lang.String email) {
+		set("email", email);
+		return (M)this;
+	}
+
+	public java.lang.String getEmail() {
+		return getStr("email");
+	}
+
+	public M setIsactive(java.lang.Boolean isactive) {
+		set("isactive", isactive);
+		return (M)this;
+	}
+
+	public java.lang.Boolean getIsactive() {
+		return get("isactive");
+	}
+
+	public M setIssuper(java.lang.Boolean issuper) {
+		set("issuper", issuper);
+		return (M)this;
+	}
+
+	public java.lang.Boolean getIssuper() {
+		return get("issuper");
+	}
+
+	public M setCreateBy(java.lang.Integer createBy) {
+		set("create_by", createBy);
+		return (M)this;
+	}
+
+	public java.lang.Integer getCreateBy() {
+		return getInt("create_by");
+	}
+
+	public M setUpdateBy(java.lang.Integer updateBy) {
+		set("update_by", updateBy);
+		return (M)this;
+	}
+
+	public java.lang.Integer getUpdateBy() {
+		return getInt("update_by");
+	}
+
+	public M setCreateTime(java.util.Date createTime) {
+		set("create_time", createTime);
+		return (M)this;
+	}
+
+	public java.util.Date getCreateTime() {
+		return get("create_time");
+	}
+
+	public M setUpdateTime(java.util.Date updateTime) {
+		set("update_time", updateTime);
+		return (M)this;
+	}
+
+	public java.util.Date getUpdateTime() {
+		return get("update_time");
+	}
+
+	public M setToken(java.lang.String token) {
+		set("token", token);
+		return (M)this;
+	}
+
+	public java.lang.String getToken() {
+		return getStr("token");
+	}
+
 }
