@@ -29,11 +29,9 @@ public class UserController extends Controller{
     @Clear({GET.class, AuthInterceptor.class})
     @Before(POST.class)
     public void login() {
-        Result result = ResultFactory.createResult(Constant.ResultCode.FIRST_LOGIN);
+        Result result = ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM);
         if (StrKit.notBlank(getPara("userName")) && StrKit.notBlank(getPara("password"))) {
             result = userService.logIn(getPara("userName"), getPara("password"));
-        } else if (StrKit.notBlank(getCookie("token"))) {
-            result = userService.logIn(getCookie("token"));
         }
         if (result.getCode() == Constant.ResultCode.SUCCESS) {
             Kv kv = ((Kv) result.getData());
@@ -42,6 +40,13 @@ public class UserController extends Controller{
             removeCookie("token");
         }
         renderJson(result);
+    }
+
+    /**
+     * 获取用户信息（基本信息，资源信息）
+     */
+    public void getUserInfo() {
+        renderJson(userService.getUserInfo(getSessionAttr("userId")));
     }
 
     /**

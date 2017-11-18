@@ -4,10 +4,10 @@ import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.wsy.model.User;
 import com.wsy.model.biz.Result;
+import com.wsy.service.privilege.ResourceService;
 import com.wsy.util.Constant;
 import com.wsy.util.EncryptUtil;
 import com.wsy.util.ResultFactory;
-import com.wsy.util.TokenUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,21 +20,10 @@ public class UserService {
 
     public static final Logger log = LogManager.getLogger(UserService.class);
 
-    /**
-     * 使用token登陆
-     * @param token
-     * @return
-     */
-    public Result logIn(String token) {
-        if (StrKit.isBlank(token)) {
-            return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM);
-        }
-        String[] arr = TokenUtil.decodeToken(token);
-        if (null != arr) {
-            User user = User.dao.findById(Integer.parseInt(arr[0]));
-            return loginResult(user);
-        }
-        return ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL);
+    private ResourceService resourceService = null;
+
+    public UserService() {
+        resourceService = new ResourceService();
     }
 
     /**
@@ -51,11 +40,7 @@ public class UserService {
         if (null == passMD5Str) {
             return ResultFactory.createResult(Constant.ResultCode.MD5_ERR);
         }
-        User user = User.dao.findFirst("select * from user t where t.user_name = ? and t.password = ?", userName, passMD5Str);
-        return loginResult(user);
-    }
-
-    private Result loginResult(User user) {
+        User user = User.dao.findFirst("select * from user t where t.user_name = ? and t.password = ? and t.isactive = 1", userName, passMD5Str);
         if (null != user) {
             log.warn("用户[{}]登录成功", user.getUserName());
             user.setLastLogin(new Date()).update();
@@ -64,6 +49,20 @@ public class UserService {
         }
         log.warn("用户登录失败");
         return ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL);
+    }
+
+    /**
+     * 获取用户的资源信息
+     * @param userId
+     * @return
+     */
+    public Result getUserInfo(int userId) {
+        User user = User.dao.findByIdLoadColumns(userId, "id,user_name,nick_name,issuper,avatar,sex,mobile");
+        if (null == user) {
+            return ResultFactory.createResult(Constant.ResultCode.USER_DONOT_EXIST);
+        }
+        Kv kv = Kv.by("user", user).set("resource", resourceService.getUserAllResource(userId));
+        return ResultFactory.success(kv);
     }
 
     /**

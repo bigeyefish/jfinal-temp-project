@@ -2,9 +2,9 @@ package com.wsy.interceptor;
 
 import com.jfinal.aop.Interceptor;
 import com.jfinal.aop.Invocation;
-import com.jfinal.kit.StrKit;
+import com.wsy.model.User;
+import com.wsy.model.biz.Result;
 import com.wsy.util.Constant;
-import com.wsy.util.ResultFactory;
 import com.wsy.util.TokenUtil;
 
 /**
@@ -12,10 +12,15 @@ import com.wsy.util.TokenUtil;
  */
 public class AuthInterceptor implements Interceptor {
     public void intercept(Invocation inv) {
-        String token = inv.getController().getCookie("token");
-        if (StrKit.isBlank(token) || TokenUtil.decodeToken(token) == null) {
-            inv.getController().renderJson(ResultFactory.createResult(Constant.ResultCode.HAVE_NOT_LOGIN, null));
+        Result result = TokenUtil.validate(inv.getController().getCookie("token"));
+        if (result.getCode() != Constant.ResultCode.SUCCESS) {
+            if (result.getCode() == Constant.ResultCode.TOKEN_TIMEOUT) {
+                inv.getController().getResponse().setStatus(401);
+                inv.getController().removeCookie("token");
+            }
+            inv.getController().renderJson(result);
         } else {
+            inv.getController().setSessionAttr("userId", ((User)result.getData()).getId());
             inv.invoke();
         }
     }

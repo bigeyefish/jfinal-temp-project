@@ -23,6 +23,11 @@ public class Constant {
         public static final int PASSWD_LENGTH_ERR = 1005;
         public static final int MD5_ERR = 1006;
         public static final int FIRST_LOGIN = 1007;
+        public static final int ILLEGAL_TOKEN = 1008;
+        public static final int TOKEN_TIMEOUT = 1009;
+        public static final int USER_DONOT_EXIST = 1009;
+        public static final int USER_INACTIVE = 1010;
+        public static final int DUPLICATE_RESOURCE = 1011;
     }
 
     static {
@@ -35,5 +40,24 @@ public class Constant {
         codeMap.put(ResultCode.PASSWD_LENGTH_ERR, "密码长度在6-16之间");
         codeMap.put(ResultCode.MD5_ERR, "MD5加密异常");
         codeMap.put(ResultCode.FIRST_LOGIN, "首次登陆");
+        codeMap.put(ResultCode.ILLEGAL_TOKEN, "非法token");
+        codeMap.put(ResultCode.TOKEN_TIMEOUT, "token 过期");
+        codeMap.put(ResultCode.USER_DONOT_EXIST, "用户不存在");
+        codeMap.put(ResultCode.USER_INACTIVE, "用户不可用");
+        codeMap.put(ResultCode.DUPLICATE_RESOURCE, "存在相同的资源");
+    }
+
+    public static class CACHE_KEY {
+        public static final String USER_RESOURCE = "user_resource";
+    }
+
+    /**
+     * 资源类型
+     */
+    public static class RESOURCE_TYPE {
+        public static final int MENU = 1;
+        public static final int BUTTON = 2;
+        public static final int DATA = 3;
+        public static final int DATA_COMMON = 4;
     }
 }
