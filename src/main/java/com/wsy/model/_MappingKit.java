@@ -18,8 +18,14 @@ public class _MappingKit {
 	public static void mapping(ActiveRecordPlugin arp) {
 		arp.addMapping("family", "id", Family.class);
 		arp.addMapping("job", "id", Job.class);
+		arp.addMapping("permission", "id", Permission.class);
+		arp.addMapping("permission_resource", "id", PermissionResource.class);
+		arp.addMapping("resource", "id", Resource.class);
+		arp.addMapping("role", "id", Role.class);
+		arp.addMapping("role_permission", "id", RolePermission.class);
 		arp.addMapping("task", "id", Task.class);
 		arp.addMapping("user", "id", User.class);
+		arp.addMapping("user_role", "id", UserRole.class);
 	}
 }
 

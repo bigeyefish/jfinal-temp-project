@@ -1,6 +1,7 @@
 package com.wsy.routes;
 
 import com.jfinal.config.Routes;
+import com.wsy.controller.ResourceController;
 import com.wsy.controller.UserController;
 import com.wsy.interceptor.AdminInterceptor;
 
@@ -11,5 +12,6 @@ public class AdminRoutes extends Routes {
     public void config() {
         addInterceptor(new AdminInterceptor());
         add("/api/user", UserController.class);
+        add("/api/resource", ResourceController.class);
     }
 }
