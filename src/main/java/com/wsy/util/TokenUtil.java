@@ -30,6 +30,14 @@ public class TokenUtil {
     }
 
     /**
+     * 删除用户token
+     * @param id
+     */
+    public static void delUserToken(int id) {
+        User.dao.findById(id).setToken("").update();
+    }
+
+    /**
      * 从token中解析出数据
      * @param token
      * @return
