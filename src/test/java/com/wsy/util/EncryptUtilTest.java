@@ -14,7 +14,7 @@ public class EncryptUtilTest {
 
     @Test
     public void getMD5() throws Exception {
-        String s = EncryptUtil.getMD5("*_*ILovePotato*_*admin123");
+        String s = EncryptUtil.getMD5("*_*ILovePotato*_*123456");
         System.out.println(s);
     }
 

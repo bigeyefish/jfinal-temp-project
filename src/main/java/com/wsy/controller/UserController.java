@@ -60,4 +60,16 @@ public class UserController extends Controller{
         Integer userId = getSessionAttr("userId");
         renderJson(userService.modifyPassword(userId, oldPass, newPass));
     }
+
+    /**
+     * 登出
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void logout() {
+        TokenUtil.delUserToken(getSessionAttr("userId"));
+        removeSessionAttr("userId");
+        removeCookie("token");
+        renderJson(ResultFactory.success(null));
+    }
 }
