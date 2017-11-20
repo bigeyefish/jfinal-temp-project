@@ -1,10 +1,11 @@
 package com.wsy.service;
 
 import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.Page;
 import com.wsy.model.Job;
 import com.wsy.model.Task;
+import com.wsy.model.biz.Result;
 import com.wsy.util.Constant;
+import com.wsy.util.ResultFactory;
 
 import java.util.List;
 
@@ -35,9 +36,9 @@ public class TaskService {
      * 查询
      * @return
      */
-    public Page<Task> queryFamilyTask(int userId, int page, int size) {
-        return Task.dao.paginate(page, size, "select *", "from task where (executor = ? and type = " +
+    public Result queryFamilyTask(int userId, int page, int size) {
+        return ResultFactory.success(Task.dao.paginate(page, size, "select *", "from task where (executor = ? and type = " +
                 Constant.TaskType.PERSONAL + ") or (type != " + Constant.TaskType.PERSONAL +
-                " and executor = (select id from family where id = ?))", userId, userId);
+                " and executor = (select family_id from user where id = ?))", userId, userId));
     }
 }

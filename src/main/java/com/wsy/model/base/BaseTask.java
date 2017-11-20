@@ -36,13 +36,13 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return getStr("desc");
 	}
 
-	public M setCreateTime(java.util.Date createTime) {
-		set("create_time", createTime);
+	public M setCreatedTime(java.util.Date createdTime) {
+		set("created_time", createdTime);
 		return (M)this;
 	}
 
-	public java.util.Date getCreateTime() {
-		return get("create_time");
+	public java.util.Date getCreatedTime() {
+		return get("created_time");
 	}
 
 	public M setType(java.lang.Integer type) {
@@ -63,13 +63,13 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return getInt("score");
 	}
 
-	public M setCreateBy(java.lang.Integer createBy) {
-		set("create_by", createBy);
+	public M setCreatedBy(java.lang.Integer createdBy) {
+		set("created_by", createdBy);
 		return (M)this;
 	}
 
-	public java.lang.Integer getCreateBy() {
-		return getInt("create_by");
+	public java.lang.Integer getCreatedBy() {
+		return getInt("created_by");
 	}
 
 	public M setPriority(java.lang.Integer priority) {
@@ -133,6 +133,24 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 
 	public java.lang.Integer getExecutor() {
 		return getInt("executor");
+	}
+
+	public M setAmount(java.lang.Double amount) {
+		set("amount", amount);
+		return (M)this;
+	}
+
+	public java.lang.Double getAmount() {
+		return getDouble("amount");
+	}
+
+	public M setUnit(java.lang.Integer unit) {
+		set("unit", unit);
+		return (M)this;
+	}
+
+	public java.lang.Integer getUnit() {
+		return getInt("unit");
 	}
 
 }
