@@ -4,6 +4,7 @@ import com.jfinal.ext.kit.DateKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.Task;
 import com.wsy.model.User;
+import com.wsy.service.FamilyService;
 import com.wsy.service.TaskService;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
@@ -25,10 +26,12 @@ public class MyJob implements Job {
 
     private TaskService taskService;
     private UserService userService;
+    private FamilyService familyService;
 
     public MyJob() {
-        this.taskService = new TaskService();
-        this.userService = new UserService();
+        taskService = new TaskService();
+        userService = new UserService();
+        familyService = new FamilyService();
     }
 
     @Override
@@ -47,7 +50,7 @@ public class MyJob implements Job {
         // 生成job
         List<com.wsy.model.Job> newJobList = new ArrayList();
         if (task.getType() == Constant.TaskType.FAMILY_COMPETE || task.getType() == Constant.TaskType.FAMILY_TOGETHER) {
-            List<User> userList = userService.findUsersByFamily(task.getExecutor());
+            List<User> userList = familyService.getUsersByFamily(task.getExecutor());
             newJobList.addAll(userList.stream().map(user -> MyJob.jobGenerator(task, jobCode, user.getId())).collect(Collectors.toList()));
         } else {
             newJobList.add(MyJob.jobGenerator(task, jobCode, task.getExecutor()));

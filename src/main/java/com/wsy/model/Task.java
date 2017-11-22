@@ -1,6 +1,8 @@
 package com.wsy.model;
 
 import com.wsy.model.base.BaseTask;
+import com.wsy.service.FamilyService;
+import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 
 /**
@@ -10,14 +12,22 @@ import com.wsy.util.Constant;
 public class Task extends BaseTask<Task> {
 	public static final Task dao = new Task().dao();
 
+	private UserService userService;
+	private FamilyService familyService;
+
+	public Task() {
+		userService = new UserService();
+		familyService = new FamilyService();
+	}
+
 	public String getCreatorName() {
-		return User.dao.findById(getCreatedBy()).getNickName();
+		return userService.getUserBasic(getCreatedBy()).getNickName();
 	}
 
 	public String getExecutorName() {
 		if (getType() == Constant.TaskType.PERSONAL) {
-			return User.dao.findById(getExecutor()).getNickName();
+			return userService.getUserBasic(getExecutor()).getNickName();
 		}
-		return Family.dao.findById(getExecutor()).getName();
+		return familyService.getFamilyById(getExecutor()).getName();
 	}
 }

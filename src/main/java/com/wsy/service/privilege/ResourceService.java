@@ -4,7 +4,6 @@ import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.ehcache.CacheKit;
 import com.wsy.model.Resource;
-import com.wsy.model.User;
 import com.wsy.model.biz.Result;
 import com.wsy.util.Constant;
 import com.wsy.util.ResultFactory;
@@ -23,11 +22,10 @@ public class ResourceService {
      * @param userId 用户id
      * @return 资源数据
      */
-    public Map getUserAllResource(int userId) {
+    public Map getUserAllResource(int userId, boolean issuper) {
         return CacheKit.get(Constant.CACHE_KEY.USER_RESOURCE, userId, () -> {
-            User user = User.dao.findById(userId);
             List<Resource> resourceList = null;
-            if (user.getIssuper()) {
+            if (issuper) {
                 resourceList = Resource.dao.find("select * from resource order by seq");
             } else {
                 String sql = "select * from resource where isactive=1 and (type=4 or id in (" +

@@ -2,7 +2,6 @@ package com.wsy.service;
 
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
-import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.User;
 import com.wsy.model.biz.Result;
 import com.wsy.service.privilege.ResourceService;
@@ -13,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Lenovo on 2017/10/15.
@@ -23,9 +21,11 @@ public class UserService {
     public static final Logger log = LogManager.getLogger(UserService.class);
 
     private ResourceService resourceService = null;
+    private FamilyService familyService = null;
 
     public UserService() {
         resourceService = new ResourceService();
+        familyService = new FamilyService();
     }
 
     /**
@@ -59,11 +59,12 @@ public class UserService {
      * @return
      */
     public Result getUserInfo(int userId) {
-        User user = User.dao.findByIdLoadColumns(userId, "id,user_name,nick_name,issuper,avatar,sex,mobile");
+        User user = getUserBasic(userId);
         if (null == user) {
             return ResultFactory.createResult(Constant.ResultCode.USER_DONOT_EXIST);
         }
-        Kv kv = Kv.by("user", user).set("resource", resourceService.getUserAllResource(userId));
+        Kv kv = Kv.by("user", user).set("resource", resourceService.getUserAllResource(userId, user.getIssuper()))
+                .set("familyUser", familyService.getUsersByFamily(user.getFamilyId()));
         return ResultFactory.success(kv);
     }
 
@@ -102,11 +103,11 @@ public class UserService {
     }
 
     /**
-     * 根据家庭编号查询家庭成员
-     * @param familyId
+     * 从缓存中获取用户基础信息（不包含密码）
+     * @param userId
      * @return
      */
-    public List<User> findUsersByFamily(int familyId) {
-        return User.dao.find(Db.getSqlPara("index.findUsersByFamily", familyId));
+    public User getUserBasic(int userId) {
+        return User.dao.findFirstByCache(Constant.CACHE_KEY.USER_BASIC, userId, "select id,user_name,nick_name,issuper,avatar,sex,mobile,family_id from user where id = ?", userId);
     }
 }

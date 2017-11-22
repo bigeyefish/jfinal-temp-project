@@ -56,6 +56,8 @@ public class Constant {
 
     public static class CACHE_KEY {
         public static final String USER_RESOURCE = "user_resource";
+        public static final String USER_BASIC = "user_basic";
+        public static final String FAMILY_BASIC = "family_basic";
     }
 
     /**
