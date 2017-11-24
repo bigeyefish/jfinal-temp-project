@@ -5,5 +5,5 @@
   select * from job t where t.code = #para(0)
 #end
 #sql("findUsersByFamily")
-  select * from user t where t.family_id = #para(0)
+  select id, nick_name, family_id from user t where t.family_id = #para(0)
 #end

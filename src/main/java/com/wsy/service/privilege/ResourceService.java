@@ -23,11 +23,10 @@ public class ResourceService {
      * @param userId 用户id
      * @return 资源数据
      */
-    public Map getUserAllResource(int userId) {
+    public Map getUserAllResource(int userId, boolean issuper) {
         return CacheKit.get(Constant.CACHE_KEY.USER_RESOURCE, userId, () -> {
-            User user = User.dao.findById(userId);
-            List<Resource> resourceList;
-            if (user.getIssuper()) {
+            List<Resource> resourceList = null;
+            if (issuper) {
                 resourceList = Resource.dao.find("select * from resource order by seq");
             } else {
                 String sql = "select * from resource where isactive=1 and (type=4 or id in (" +
@@ -65,7 +64,7 @@ public class ResourceService {
     public List<Resource> getAllMenu() {
         return CacheKit.get(Constant.CACHE_KEY.USER_RESOURCE, "ALL_MENU", () -> {
             List<Resource> resourceList = Resource.dao.find("select * from resource where type = 1 order by seq");
-            List<Resource> result = new ArrayList<>();
+            List<Resource> result = new ArrayList<Resource>();
             resourceList.stream().filter(resource -> resource.getParentId() == 0).forEach(resource -> {
                 result.add(resource);
                 fillChildren(resource, resourceList);
@@ -92,9 +91,9 @@ public class ResourceService {
     }
 
     /**
-     * 添加资源
-     * @param resource 资源对象
-     * @return result
+     * 添加资源文件
+     * @param resource
+     * @return
      */
     public Result add(Resource resource) {
         if (resource.getType() == Constant.RESOURCE_TYPE.MENU) {
@@ -116,7 +115,7 @@ public class ResourceService {
 
     /**
      * 删除资源
-     * @param id 资源id
+     * @param id
      */
     public void deleteResource(int id) {
         // 菜单要找出相关子菜单

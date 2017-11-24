@@ -153,4 +153,13 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return getInt("unit");
 	}
 
+	public M setMeasureType(java.lang.Integer measureType) {
+		set("measure_type", measureType);
+		return (M)this;
+	}
+
+	public java.lang.Integer getMeasureType() {
+		return getInt("measure_type");
+	}
+
 }

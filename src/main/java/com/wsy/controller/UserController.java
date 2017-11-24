@@ -10,6 +10,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
 import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model.biz.Result;
+import com.wsy.service.FamilyService;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 import com.wsy.util.ResultFactory;
@@ -22,6 +23,7 @@ import com.wsy.util.TokenUtil;
 public class UserController extends Controller{
 
     private UserService userService = new UserService();
+    private FamilyService familyService = new FamilyService();
 
     /**
      * 登录
