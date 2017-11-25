@@ -71,8 +71,6 @@ public class MyJob implements Job {
         job.setTaskId(task.getId());
         job.setUserId(userId);
         job.setCreateTime(new Date());
-        job.setName(task.getName());
-        job.setType(task.getType());
         return job;
     }
 }

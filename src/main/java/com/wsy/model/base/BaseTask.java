@@ -162,4 +162,22 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return getInt("measure_type");
 	}
 
+	public M setStartTime(java.util.Date startTime) {
+		set("start_time", startTime);
+		return (M)this;
+	}
+
+	public java.util.Date getStartTime() {
+		return get("start_time");
+	}
+
+	public M setDelayType(java.lang.Integer delayType) {
+		set("delay_type", delayType);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDelayType() {
+		return getInt("delay_type");
+	}
+
 }
