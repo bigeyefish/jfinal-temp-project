@@ -1,6 +1,8 @@
 package com.wsy.controller;
 
 import com.jfinal.core.Controller;
+import com.jfinal.kit.Kv;
+import com.wsy.model.User;
 import com.wsy.service.TaskService;
 
 /**
@@ -18,6 +20,7 @@ public class TaskController extends Controller{
      * 查询家庭任务列表
      */
     public void queryFamilyTask() {
-        renderJson(taskService.queryFamilyTask(getSessionAttr("userId"), getParaToInt(0), getParaToInt(1)));
+        Kv kv = getSessionAttr("userInfo");
+        renderJson(taskService.queryFamilyTask(((User)kv.get("user")).getFamilyId(), getParaToInt(0), getParaToInt(1)));
     }
 }

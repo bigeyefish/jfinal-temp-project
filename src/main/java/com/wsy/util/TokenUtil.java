@@ -3,6 +3,7 @@ package com.wsy.util;
 import com.jfinal.kit.StrKit;
 import com.wsy.model.User;
 import com.wsy.model.biz.Result;
+import com.wsy.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +61,7 @@ public class TokenUtil {
         if (arr == null || arr.length == 0) {
             return ResultFactory.createResult(Constant.ResultCode.ILLEGAL_TOKEN);
         }
-        User user = User.dao.findById(arr[0]);
+        User user = UserService.getUserBasicSecurity(Integer.parseInt(arr[0]));
         if (user == null) {
             return ResultFactory.createResult(Constant.ResultCode.USER_DONOT_EXIST);
         }

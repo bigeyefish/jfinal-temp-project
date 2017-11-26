@@ -77,6 +77,12 @@
            overflowToDisk="false"
            memoryStoreEvictionPolicy="FIFO"
     />
+    <cache name="user_basic_sec"
+           maxEntriesLocalHeap="1000"
+           eternal="true"
+           overflowToDisk="false"
+           memoryStoreEvictionPolicy="FIFO"
+    />
     <cache name="family_basic"
            maxEntriesLocalHeap="1000"
            eternal="true"
