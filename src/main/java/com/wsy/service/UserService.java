@@ -1,7 +1,5 @@
 package com.wsy.service;
 
-import com.jfinal.aop.Clear;
-import com.jfinal.ext.interceptor.GET;
 import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.User;
 import com.wsy.model.biz.Result;

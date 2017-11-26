@@ -1,7 +1,7 @@
 package com.wsy.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
-import com.wsy.model.Interviewer;
 
 /**
  * Created by sanyihwang on 2017/11/6.
@@ -16,8 +16,8 @@ public class CardUtilTest {
 
     @org.junit.Test
     public void decodeCardInfo() throws Exception {
-        Interviewer interviewer = CardUtil.decodeCardInfo(jsonStr);
-        System.out.println(interviewer);
+        JSONObject jsonObj = CardUtil.decodeCardInfo(jsonStr);
+        System.out.println(jsonObj);
     }
 
 }

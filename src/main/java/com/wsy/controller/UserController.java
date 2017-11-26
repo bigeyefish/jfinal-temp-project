@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * the controller witch relationship on user
@@ -38,7 +39,12 @@ public class UserController extends Controller{
             log.warn("用户[{}]登录成功", user.getUserName());
             setSessionAttr("user", user);
             user.setLastLogin(new Date()).update();
-            Kv kv = Kv.by("userName", user.getUserName()).set("nickName", user.getNickName()).set("id", user.getId()).set("idNum", user.getIdNum()).set("tel", user.getTel());
+
+            // 系统配置
+            Properties properties = PropKit.use("open.properties").getProperties();
+            Kv kv = Kv.by("userName", user.getUserName()).set("nickName", user.getNickName()).set("id", user.getId())
+                    .set("idNum", user.getIdNum()).set("tel", user.getTel()).set("sysConf", properties);
+
             renderJson(ResultFactory.success(kv));
             return;
         }

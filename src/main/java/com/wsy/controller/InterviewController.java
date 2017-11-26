@@ -41,9 +41,18 @@ public class InterviewController extends Controller {
     }
 
     /**
+     * 手动添加
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void checkInManual() {
+        renderJson(interviewService.checkInManual(getBean(Interviewer.class), ((User)getSessionAttr("user")).getId()));
+    }
+
+    /**
      * 查询访客记录
      */
     public void queryInterviewerById() {
-        renderJson(interviewService.queryInterviewerById(getPara("certId"), getParaToInt("page", 1), getParaToInt("size", 10)));
+        renderJson(interviewService.queryInterviewerById(((User)getSessionAttr("user")).getDistrictId(), getParaToInt("page", 1), getParaToInt("size", 10)));
     }
 }

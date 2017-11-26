@@ -81,4 +81,13 @@ public abstract class BaseInterviewer<M extends BaseInterviewer<M>> extends Mode
 		return getInt("create_by");
 	}
 
+	public M setPortrait(java.lang.String portrait) {
+		set("portrait", portrait);
+		return (M)this;
+	}
+
+	public java.lang.String getPortrait() {
+		return getStr("portrait");
+	}
+
 }

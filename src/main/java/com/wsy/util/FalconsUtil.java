@@ -6,6 +6,8 @@ import com.jfinal.ext.kit.DateKit;
 import com.jfinal.kit.PropKit;
 import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
@@ -16,12 +18,18 @@ import java.util.Date;
  */
 public class FalconsUtil {
 
+    public static final Logger log = LogManager.getLogger(FalconsUtil.class);
+
+
     /**
      * 上报访客数据
      * @param interviewer
      * @param imgBase64
      */
     public static Result reportData(Interviewer interviewer, String imgBase64) {
+
+        log.info("base64:" + imgBase64);
+
         JSONObject map = new JSONObject();
         map.put("name", interviewer.getName());
         map.put("sex", interviewer.getSex());
@@ -33,6 +41,7 @@ public class FalconsUtil {
         map.put("image", imgBase64);
         try {
             String result = HttpUtil.postJson(PropKit.get("falcons.url"), map);
+            log.info("result:" + result);
             JSONObject jsonObject = (JSONObject) JSON.parse(result);
             if (null != jsonObject.get("code")) {
                 return new Result(Integer.parseInt((String)jsonObject.get("code")), (String)jsonObject.get("message"), null);

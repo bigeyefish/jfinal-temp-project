@@ -81,4 +81,13 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return getStr("tel");
 	}
 
+	public M setDistrictId(java.lang.Integer districtId) {
+		set("district_id", districtId);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDistrictId() {
+		return getInt("district_id");
+	}
+
 }

@@ -3,7 +3,6 @@ import cn.net.mycards.qrcode.Parser;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.PropKit;
-import com.wsy.model.Interviewer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +22,7 @@ public class CardUtil {
      * 从json字符串中解析出卡信息
      * @param jsonStr
      */
-    public static Interviewer decodeCardInfo(String jsonStr) {
+    public static JSONObject decodeCardInfo(String jsonStr) {
 
         try {
             String info = Parser.getInfo(jsonStr, area, 0, null, PropKit.get("card.uid"), PropKit.get("card.enckey"), PropKit.get("card.hashkey"));
@@ -34,12 +33,7 @@ public class CardUtil {
                 log.error("解析电子卡包身份信息异常：code:[{}], msg: [{}]", resultCode, resultMsg);
                 return null;
             }
-            JSONObject jsonObj = (JSONObject) jsonObject.get("APP");
-            Interviewer interviewer = new Interviewer();
-            interviewer.setName((String)jsonObj.get("name"));
-            interviewer.setTel((String)jsonObj.get("tel"));
-            interviewer.setIdNum((String)jsonObj.get("idNum"));
-            return interviewer;
+            return (JSONObject) jsonObject.get("APP");
         } catch (IOException e) {
             e.printStackTrace();
             log.error("解析电子卡包身份信息报错：{}", e.getMessage());

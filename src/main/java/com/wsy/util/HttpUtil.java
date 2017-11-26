@@ -29,6 +29,8 @@ public class HttpUtil {
             int code = response.getStatusLine().getStatusCode();
             if (code == 200) {
                 result = EntityUtils.toString(response.getEntity(), "UTF-8");
+            } else {
+                LogUtil.LogType.errorLog.error("http request faild: [" + url + "][" + code + "]");
             }
         }
         return result;
