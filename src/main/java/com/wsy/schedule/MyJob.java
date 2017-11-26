@@ -42,7 +42,8 @@ public class MyJob implements Job {
 
         // 生成job
         List<com.wsy.model.Job> newJobList = new ArrayList<>();
-        newJobList.addAll(task.getExecutorList().stream().map(record -> MyJob.jobGenerator(task, jobCode, record.getInt("user_id"))).collect(Collectors.toList()));
+
+        newJobList.addAll(taskService.queryExecutorsById(task.getId()).stream().map(record -> MyJob.jobGenerator(task, jobCode, record.getInt("user_id"))).collect(Collectors.toList()));
 
         Db.batchSave(newJobList, 100);
         task.setNextFireTime(jobExecutionContext.getNextFireTime()).update();
