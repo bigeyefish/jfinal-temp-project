@@ -3,10 +3,7 @@ package com.wsy.schedule;
 import com.jfinal.ext.kit.DateKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.wsy.model.Task;
-import com.wsy.model.User;
-import com.wsy.service.FamilyService;
 import com.wsy.service.TaskService;
-import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 import com.wsy.util.LogUtil;
 import org.quartz.Job;
@@ -25,13 +22,9 @@ import java.util.stream.Collectors;
 public class MyJob implements Job {
 
     private TaskService taskService;
-    private UserService userService;
-    private FamilyService familyService;
 
     public MyJob() {
         taskService = new TaskService();
-        userService = new UserService();
-        familyService = new FamilyService();
     }
 
     @Override
@@ -48,13 +41,10 @@ public class MyJob implements Job {
         }
 
         // 生成job
-        List<com.wsy.model.Job> newJobList = new ArrayList();
-        if (task.getType() == Constant.TaskType.FAMILY_COMPETE || task.getType() == Constant.TaskType.FAMILY_TOGETHER) {
-            List<User> userList = familyService.getUsersByFamily(task.getExecutor());
-            newJobList.addAll(userList.stream().map(user -> MyJob.jobGenerator(task, jobCode, user.getId())).collect(Collectors.toList()));
-        } else {
-            newJobList.add(MyJob.jobGenerator(task, jobCode, task.getExecutor()));
-        }
+        List<com.wsy.model.Job> newJobList = new ArrayList<>();
+
+        newJobList.addAll(taskService.queryExecutorsById(task.getId()).stream().map(record -> MyJob.jobGenerator(task, jobCode, record.getInt("user_id"))).collect(Collectors.toList()));
+
         Db.batchSave(newJobList, 100);
         task.setNextFireTime(jobExecutionContext.getNextFireTime()).update();
         LogUtil.LogType.taskLog.info("job {} fired !!!", task.getName());
@@ -62,8 +52,8 @@ public class MyJob implements Job {
 
     /**
      * 根据task生成job
-     * @param task
-     * @return
+     * @param task 任务实体
+     * @return result
      */
     private static com.wsy.model.Job jobGenerator(Task task, String code, int userId) {
         com.wsy.model.Job job = new com.wsy.model.Job();
@@ -71,8 +61,6 @@ public class MyJob implements Job {
         job.setTaskId(task.getId());
         job.setUserId(userId);
         job.setCreateTime(new Date());
-        job.setName(task.getName());
-        job.setType(task.getType());
         return job;
     }
 }

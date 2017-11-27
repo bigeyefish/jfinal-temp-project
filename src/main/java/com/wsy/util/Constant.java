@@ -47,16 +47,17 @@ public class Constant {
         codeMap.put(ResultCode.DUPLICATE_RESOURCE, "存在相同的资源");
     }
 
-    /* 任务类型 1-个人 2-家庭共同 3-家庭竞争 */
+    /* 任务类型 1-共同 2-竞争 */
     public static class TaskType {
-        public static final int PERSONAL = 1;
-        public static final int FAMILY_TOGETHER = 2;
-        public static final int FAMILY_COMPETE = 3;
+        public static final int TOGETHER = 1;
+        public static final int COMPETE = 2;
     }
 
     public static class CACHE_KEY {
         public static final String USER_RESOURCE = "user_resource";
         public static final String USER_BASIC = "user_basic";
+        // 带敏感信息（token、password）的用户基本信息
+        public static final String USER_BASIC_SEC = "user_basic_sec";
         public static final String FAMILY_BASIC = "family_basic";
     }
 

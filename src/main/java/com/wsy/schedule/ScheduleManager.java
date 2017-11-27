@@ -49,8 +49,9 @@ public class ScheduleManager {
                     if (task.getEndTime() != null) {
                         triggerBuilder.endAt(task.getEndTime());
                     }
-
-                    scheduler.scheduleJob(jobDetail, triggerBuilder.build());
+                    CronTrigger trigger = triggerBuilder.build();
+                    scheduler.scheduleJob(jobDetail, trigger);
+                    System.out.println(task.getName() + trigger.getNextFireTime());
                 }
             }
 

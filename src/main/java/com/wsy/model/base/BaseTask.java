@@ -126,15 +126,6 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return get("next_fire_time");
 	}
 
-	public M setExecutor(java.lang.Integer executor) {
-		set("executor", executor);
-		return (M)this;
-	}
-
-	public java.lang.Integer getExecutor() {
-		return getInt("executor");
-	}
-
 	public M setAmount(java.lang.Double amount) {
 		set("amount", amount);
 		return (M)this;
@@ -160,6 +151,24 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 
 	public java.lang.Integer getMeasureType() {
 		return getInt("measure_type");
+	}
+
+	public M setStartTime(java.util.Date startTime) {
+		set("startTime", startTime);
+		return (M)this;
+	}
+
+	public java.util.Date getStartTime() {
+		return get("startTime");
+	}
+
+	public M setDelayType(java.lang.Integer delayType) {
+		set("delay_type", delayType);
+		return (M)this;
+	}
+
+	public java.lang.Integer getDelayType() {
+		return getInt("delay_type");
 	}
 
 }

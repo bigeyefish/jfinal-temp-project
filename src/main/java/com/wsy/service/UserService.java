@@ -107,7 +107,16 @@ public class UserService {
      * @param userId
      * @return
      */
-    public User getUserBasic(int userId) {
+    public static User getUserBasic(int userId) {
         return User.dao.findFirstByCache(Constant.CACHE_KEY.USER_BASIC, userId, "select id,user_name,nick_name,issuper,avatar,sex,mobile,family_id from user where id = ?", userId);
+    }
+
+    /**
+     * 从缓存中获取带敏感信息（token、密码）的用户基础信息
+     * @param userId
+     * @return
+     */
+    public static User getUserBasicSecurity(int userId) {
+        return User.dao.findFirstByCache(Constant.CACHE_KEY.USER_BASIC_SEC, userId, "select * from user where id = ?", userId);
     }
 }

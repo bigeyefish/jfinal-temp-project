@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50605
 File Encoding         : 65001
 
-Date: 2017-11-21 23:25:27
+Date: 2017-11-27 00:27:55
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,31 +41,32 @@ CREATE TABLE `job` (
   `user_id` int(11) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `status` int(1) DEFAULT '1',
-  `name` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `job_task_id` (`task_id`),
   KEY `job_user_id` (`user_id`),
   CONSTRAINT `job_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `job_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of job
 -- ----------------------------
-INSERT INTO `job` VALUES ('6', '1_2017-11-05', '1', '1', '2017-11-05 22:44:05', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('7', '1_2017-11-18', '1', '2', '2017-11-18 22:25:40', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('8', '1_2017-11-18', '1', '3', '2017-11-18 22:25:40', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('9', '1_2017-11-18', '1', '4', '2017-11-18 22:25:40', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('10', '1_2017-11-19', '1', '2', '2017-11-19 08:58:11', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('11', '1_2017-11-19', '1', '3', '2017-11-19 08:58:11', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('12', '1_2017-11-19', '1', '4', '2017-11-19 08:58:11', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('13', '1_2017-11-20', '1', '2', '2017-11-20 21:38:08', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('14', '1_2017-11-20', '1', '3', '2017-11-20 21:38:08', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('15', '1_2017-11-20', '1', '4', '2017-11-20 21:38:08', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('16', '1_2017-11-21', '1', '2', '2017-11-21 00:00:00', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('17', '1_2017-11-21', '1', '3', '2017-11-21 00:00:00', '1', '吃水果', '2');
-INSERT INTO `job` VALUES ('18', '1_2017-11-21', '1', '4', '2017-11-21 00:00:00', '1', '吃水果', '2');
+INSERT INTO `job` VALUES ('6', '1_2017-11-05', '1', '1', '2017-11-05 22:44:05', '1');
+INSERT INTO `job` VALUES ('7', '1_2017-11-18', '1', '2', '2017-11-18 22:25:40', '1');
+INSERT INTO `job` VALUES ('8', '1_2017-11-18', '1', '3', '2017-11-18 22:25:40', '1');
+INSERT INTO `job` VALUES ('9', '1_2017-11-18', '1', '4', '2017-11-18 22:25:40', '1');
+INSERT INTO `job` VALUES ('10', '1_2017-11-19', '1', '2', '2017-11-19 08:58:11', '1');
+INSERT INTO `job` VALUES ('11', '1_2017-11-19', '1', '3', '2017-11-19 08:58:11', '1');
+INSERT INTO `job` VALUES ('12', '1_2017-11-19', '1', '4', '2017-11-19 08:58:11', '1');
+INSERT INTO `job` VALUES ('13', '1_2017-11-20', '1', '2', '2017-11-20 21:38:08', '1');
+INSERT INTO `job` VALUES ('14', '1_2017-11-20', '1', '3', '2017-11-20 21:38:08', '1');
+INSERT INTO `job` VALUES ('15', '1_2017-11-20', '1', '4', '2017-11-20 21:38:08', '1');
+INSERT INTO `job` VALUES ('16', '1_2017-11-21', '1', '2', '2017-11-21 00:00:00', '1');
+INSERT INTO `job` VALUES ('17', '1_2017-11-21', '1', '3', '2017-11-21 00:00:00', '1');
+INSERT INTO `job` VALUES ('18', '1_2017-11-21', '1', '4', '2017-11-21 00:00:00', '1');
+INSERT INTO `job` VALUES ('19', '1_2017-11-27', '1', '2', '2017-11-27 00:00:12', '1');
+INSERT INTO `job` VALUES ('20', '1_2017-11-27', '1', '3', '2017-11-27 00:00:12', '1');
+INSERT INTO `job` VALUES ('21', '1_2017-11-27', '1', '4', '2017-11-27 00:00:12', '1');
 
 -- ----------------------------
 -- Table structure for `permission`
@@ -286,7 +287,7 @@ CREATE TABLE `task` (
   `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `desc` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_time` datetime DEFAULT NULL,
-  `type` int(2) DEFAULT NULL COMMENT '类型 1 - 个人，2 - 家庭共同，3 - 家庭竞争',
+  `type` int(2) DEFAULT NULL COMMENT '类型 1 - 共同，2 - 竞争',
   `score` int(11) DEFAULT NULL COMMENT '分值',
   `created_by` int(11) DEFAULT NULL COMMENT '创建者',
   `priority` int(1) DEFAULT NULL COMMENT '优先级',
@@ -295,17 +296,35 @@ CREATE TABLE `task` (
   `status` int(11) DEFAULT '1',
   `cron_expression` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
   `next_fire_time` datetime DEFAULT NULL,
-  `executor` int(11) DEFAULT NULL COMMENT '任务执行单位（个人或者家庭id）根据type',
   `amount` double(11,2) DEFAULT NULL COMMENT '数量',
   `unit` int(2) DEFAULT NULL COMMENT '单位',
   `measure_type` int(2) DEFAULT '1' COMMENT '度量标准 1-数字 2-开关',
+  `startTime` datetime DEFAULT NULL,
+  `delay_type` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', '吃水果', '每天一个水果', '2017-11-04 22:23:07', '2', '5', '2', '4', null, null, '1', '0 * * * * ?', '2017-11-21 00:01:00', '1', '1.00', '1', '1');
+INSERT INTO `task` VALUES ('1', '吃水果', '每天一个水果', '2017-11-04 22:23:07', '2', '5', '2', '4', null, null, '1', '0 * * * * ?', '2017-11-27 00:01:00', '1.00', '1', '1', null, null);
+
+-- ----------------------------
+-- Table structure for `task_user`
+-- ----------------------------
+DROP TABLE IF EXISTS `task_user`;
+CREATE TABLE `task_user` (
+  `task_id` int(11) NOT NULL DEFAULT '0',
+  `user_id` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`task_id`,`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of task_user
+-- ----------------------------
+INSERT INTO `task_user` VALUES ('1', '2');
+INSERT INTO `task_user` VALUES ('1', '3');
+INSERT INTO `task_user` VALUES ('1', '4');
 
 -- ----------------------------
 -- Table structure for `user`
@@ -339,9 +358,9 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', 'admin', '915d46552c671efa1eb7753a090eb10', null, '2017-11-14 00:01:37', null, '1', 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '');
-INSERT INTO `user` VALUES ('2', 'wangshiyu', '土豆爸爸', '959ba35982e3f5aacfd1ac32a71213de', '30', '2017-11-19 22:11:23', '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '3tMLYrVL5nisdn1RChk6SgABzxh6TtjjMS7klOIunYg=');
-INSERT INTO `user` VALUES ('3', 'qinting', '土豆妈妈', 'qinting', '30', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
-INSERT INTO `user` VALUES ('4', 'wanghaiyu', '土豆', 'wanghaiyu', '4', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
+INSERT INTO `user` VALUES ('2', 'wangshiyu', '土豆爸爸', '959ba35982e3f5aacfd1ac32a71213de', '30', '2017-11-27 00:10:35', '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '3tMLYrVL5nisdn1RChk6SoEgBv4PDl/MX1qiJ6yCjrM=');
+INSERT INTO `user` VALUES ('3', 'qinting', '土豆妈妈', '959ba35982e3f5aacfd1ac32a71213de', '30', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
+INSERT INTO `user` VALUES ('4', 'wanghaiyu', '土豆', '959ba35982e3f5aacfd1ac32a71213de', '4', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
 
 -- ----------------------------
 -- Table structure for `user_role`
