@@ -23,7 +23,6 @@ import com.wsy.util.TokenUtil;
 public class UserController extends Controller{
 
     private UserService userService = new UserService();
-    private FamilyService familyService = new FamilyService();
 
     /**
      * 登录

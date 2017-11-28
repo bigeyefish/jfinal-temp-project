@@ -52,6 +52,7 @@ public class ScheduleManager {
                     CronTrigger trigger = triggerBuilder.build();
                     scheduler.scheduleJob(jobDetail, trigger);
                     System.out.println(task.getName() + trigger.getNextFireTime());
+                    task.setNextFireTime(trigger.getNextFireTime()).update();
                 }
             }
 

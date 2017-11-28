@@ -13,8 +13,8 @@ public class TokenUtilTest {
 
     @org.junit.Test
     public void generateToken() throws Exception {
-        String s = TokenUtil.generateToken(1, "admin");
-        System.out.println(EncryptUtil.decrypt(s));;
+//        String s = TokenUtil.generateToken(1, "admin");
+//        System.out.println(EncryptUtil.decrypt(s));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.wsy;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.config.*;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.json.FastJsonFactory;
