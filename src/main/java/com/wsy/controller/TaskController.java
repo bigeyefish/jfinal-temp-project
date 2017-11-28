@@ -10,6 +10,9 @@ import com.wsy.model.Task;
 import com.wsy.model.User;
 import com.wsy.service.TaskService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Lenovo on 2017/11/19.
  */
@@ -18,7 +21,7 @@ public class TaskController extends Controller{
     private TaskService taskService;
 
     public TaskController() {
-        taskService = new TaskService();
+        taskService = enhance(TaskService.class);
     }
 
     /**
@@ -45,6 +48,10 @@ public class TaskController extends Controller{
     @Before(POST.class)
     public void saveTask() {
         Task task = getBean(Task.class, "", true);
-        System.out.println(task);
+        List<Integer> ids = new ArrayList<>();
+        for (String id : getPara("executorList").split(",")) {
+            ids.add(Integer.parseInt(id));
+        }
+        renderJson(taskService.save(task, ids, getSessionAttr("userId")));
     }
 }

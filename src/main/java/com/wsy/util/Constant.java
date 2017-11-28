@@ -47,10 +47,11 @@ public class Constant {
         codeMap.put(ResultCode.DUPLICATE_RESOURCE, "存在相同的资源");
     }
 
-    /* 任务类型 1-共同 2-竞争 */
+    /* 任务类型 1-个人 2-竞争 3- 共同*/
     public static class TaskType {
-        public static final int TOGETHER = 1;
+        public static final int PERSONAL = 1;
         public static final int COMPETE = 2;
+        public static final int TOGETHER = 3;
     }
 
     public static class CACHE_KEY {
@@ -75,6 +76,14 @@ public class Constant {
     public static final int TASK_ACTIVE = 1;
     /* 放在JobDataMap中的task信息的key */
     public static final String KEY_TASK_INFO = "TASK_INFO";
+
+    public static class TASK_STATUS {
+        public static final int NOT_START = 0;
+        public static final int RUNNING = 1;
+        public static final int STOP = 2;
+        public static final int END = 3;
+    }
+
 
 }
 
