@@ -16,12 +16,7 @@ import java.util.List;
  */
 public class ScheduleManager {
 
-    private static TaskService taskService;
-
-    private ScheduleManager() {
-        taskService = new TaskService();
-    }
-
+    private static TaskService taskService = new TaskService();
     private static Scheduler scheduler = null;
 
     /**

@@ -47,7 +47,7 @@ public class MyJob implements Job {
 
         Db.batchSave(newJobList, 100);
         task.setNextFireTime(jobExecutionContext.getNextFireTime()).update();
-        LogUtil.LogType.taskLog.info("job {} fired !!!", task.getName());
+        LogUtil.LogType.taskLog.info("job {} fired !!!, next fire time is {}", task.getName(), jobExecutionContext.getNextFireTime());
     }
 
     /**
