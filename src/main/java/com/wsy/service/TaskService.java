@@ -14,6 +14,7 @@ import com.wsy.util.LogUtil;
 import com.wsy.util.ResultFactory;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
+import sun.rmi.runtime.Log;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class TaskService {
         try {
             return ResultFactory.success(new CronExpression(cronStr).getNextValidTimeAfter(new Date()));
         } catch (ParseException e) {
-            return ResultFactory.error(null);
+            return ResultFactory.createResult(Constant.ResultCode.ILLEGAL_CRON);
         }
     }
 
@@ -88,8 +89,14 @@ public class TaskService {
      */
     @Before(Tx.class)
     public Result save(Task task, List<Integer> executorList, int userId) {
+
+        Result result = validateCron(task.getCronExpression());
+        if (result.getCode() != Constant.ResultCode.SUCCESS) {
+            return result;
+        }
+
         // 判断是否新增
-        if (task.getId() == 0) {
+        if (task.getId() == null) {
             task.setCreatedBy(userId).setCreatedTime(new Date());
 
             // 状态
@@ -105,8 +112,8 @@ public class TaskService {
 
             // 启动调度任务
             try {
+                task.setNextFireTime((Date) result.getData()).save();
                 Date date = ScheduleManager.startTask(task);
-                task.setNextFireTime(date).save();
 
                 List<TaskUser> taskUserList = new ArrayList<>();
                 for (Integer user : executorList) {
@@ -114,13 +121,39 @@ public class TaskService {
                 }
                 Db.batchSave(taskUserList, 100);
 
-                LogUtil.LogType.taskLog.info("start task {} success, next fire time is:", task.getName(), date);
+                LogUtil.LogType.taskLog.info("start task {} success, next fire time is: {}", task.getName(), date);
                 return ResultFactory.success(date);
             } catch (SchedulerException e) {
                 e.printStackTrace();
                 LogUtil.LogType.errorLog.error("start task {} error: ", task.getName(), e.getMessage());
             }
 
+        }
+        return ResultFactory.error(null);
+    }
+
+    /**
+     * 删除task
+     * @param taskId taskId
+     * @return Result
+     */
+    @Before(Tx.class)
+    public Result deleteTask(int taskId) {
+        try {
+
+            // 删除quartz中job
+            if (!ScheduleManager.deleteTask(taskId)) {
+                return ResultFactory.createResult(Constant.ResultCode.DELETE_QUARTZ_JOB_ERROR);
+            }
+
+            // 删除数据
+//            Task.dao.findById(taskId);
+//            Task.dao.deleteById(taskId);
+//            Db.update("delete from job where task_id = ? and ", taskId);
+            return ResultFactory.success(null);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+            LogUtil.LogType.errorLog.error("delete task [{}] error: {}", taskId, e.getMessage());
         }
         return ResultFactory.error(null);
     }

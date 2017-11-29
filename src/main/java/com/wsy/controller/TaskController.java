@@ -8,6 +8,7 @@ import com.jfinal.ext.interceptor.POST;
 import com.jfinal.kit.Kv;
 import com.wsy.model.Task;
 import com.wsy.model.User;
+import com.wsy.model.biz.Result;
 import com.wsy.service.TaskService;
 
 import java.util.ArrayList;
@@ -53,5 +54,14 @@ public class TaskController extends Controller{
             ids.add(Integer.parseInt(id));
         }
         renderJson(taskService.save(task, ids, getSessionAttr("userId")));
+    }
+
+    /**
+     * 删除任务
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void deleteTask() {
+        renderJson(taskService.deleteTask(getParaToInt("taskId")));
     }
 }

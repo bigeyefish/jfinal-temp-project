@@ -16,13 +16,7 @@ import java.util.List;
  */
 public class ScheduleManager {
 
-    private static ScheduleManager ourInstance = new ScheduleManager();
-
     private static TaskService taskService;
-
-    public static ScheduleManager getInstance() {
-        return ourInstance;
-    }
 
     private ScheduleManager() {
         taskService = new TaskService();
@@ -30,6 +24,10 @@ public class ScheduleManager {
 
     private static Scheduler scheduler = null;
 
+    /**
+     * 初始化调度
+     * @return 是否启动成功
+     */
     public static boolean init() {
         try {
 
@@ -50,6 +48,12 @@ public class ScheduleManager {
         }
     }
 
+    /**
+     * 启动task
+     * @param task 任务
+     * @return 下次执行时间
+     * @throws SchedulerException exception
+     */
     public static Date startTask(Task task) throws SchedulerException {
         // 创建JobDetail
         JobDetail jobDetail = JobBuilder.newJob(MyJob.class).withIdentity(task.getId().toString()).build();
@@ -64,5 +68,15 @@ public class ScheduleManager {
         CronTrigger trigger = triggerBuilder.build();
         scheduler.scheduleJob(jobDetail, trigger);
         return trigger.getNextFireTime();
+    }
+
+    /**
+     * 删除task
+     * @param taskId taskId
+     * @return 是否成功
+     * @throws SchedulerException exception
+     */
+    public static boolean deleteTask(int taskId) throws SchedulerException {
+        return scheduler.deleteJob(JobKey.jobKey(String.valueOf(taskId)));
     }
 }

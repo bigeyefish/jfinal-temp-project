@@ -28,6 +28,8 @@ public class Constant {
         public static final int USER_DONOT_EXIST = 1009;
         public static final int USER_INACTIVE = 1010;
         public static final int DUPLICATE_RESOURCE = 1011;
+        public static final int ILLEGAL_CRON = 1012;
+        public static final int DELETE_QUARTZ_JOB_ERROR = 1013;
     }
 
     static {
@@ -45,6 +47,8 @@ public class Constant {
         codeMap.put(ResultCode.USER_DONOT_EXIST, "用户不存在");
         codeMap.put(ResultCode.USER_INACTIVE, "用户不可用");
         codeMap.put(ResultCode.DUPLICATE_RESOURCE, "存在相同的资源");
+        codeMap.put(ResultCode.ILLEGAL_CRON, "cron表达式非法");
+        codeMap.put(ResultCode.DELETE_QUARTZ_JOB_ERROR, "删除quartz中job失败");
     }
 
     /* 任务类型 1-个人 2-竞争 3- 共同*/
