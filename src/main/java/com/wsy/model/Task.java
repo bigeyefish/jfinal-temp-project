@@ -4,6 +4,7 @@ import com.jfinal.json.JFinalJson;
 import com.wsy.model.base.BaseTask;
 import com.wsy.service.TaskService;
 import com.wsy.service.UserService;
+import com.wsy.util.Constant;
 
 import java.util.Date;
 
@@ -36,5 +37,18 @@ public class Task extends BaseTask<Task> {
 	public Task setEndTime(long endTime) {
 		set("endTime", new Date(endTime));
 		return this;
+	}
+
+	public String getStatus() {
+		// 状态
+		if (getStartTime().getTime() > new Date().getTime()) {
+			return Constant.TASK_STATUS.NOT_START;
+		} else {
+			if (null != getEndTime() && getEndTime().getTime() < new Date().getTime()) {
+				return Constant.TASK_STATUS.END;
+			} else {
+				return Constant.TASK_STATUS.RUNNING;
+			}
+		}
 	}
 }

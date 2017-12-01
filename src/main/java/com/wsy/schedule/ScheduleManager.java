@@ -35,7 +35,7 @@ public class ScheduleManager {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
 
-            List<Task> taskList = taskService.queryTaskByStatus(Constant.TASK_ACTIVE);
+            List<Task> taskList = taskService.queryTaskByStatus(true);
             for (Task task : taskList) {
                 Date date = startTask(task);
                 task.setNextFireTime(date).update();
