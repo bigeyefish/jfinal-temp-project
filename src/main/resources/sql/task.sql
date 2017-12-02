@@ -1,5 +1,5 @@
 #sql("findTaskByStatus")
-  select * from task t where t.status = #para(0)
+  select * from task t where t.is_active = #para(0)
 #end
 #sql("findJobByCode")
   select * from job t where t.code = #para(0)

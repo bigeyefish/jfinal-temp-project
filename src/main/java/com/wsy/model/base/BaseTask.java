@@ -99,13 +99,13 @@ public abstract class BaseTask<M extends BaseTask<M>> extends Model<M> implement
 		return getInt("alarm_type");
 	}
 
-	public M setStatus(java.lang.Integer status) {
-		set("status", status);
+	public M setIsActive(java.lang.Boolean isActive) {
+		set("is_active", isActive);
 		return (M)this;
 	}
 
-	public java.lang.Integer getStatus() {
-		return getInt("status");
+	public java.lang.Boolean getIsActive() {
+		return get("is_active");
 	}
 
 	public M setCronExpression(java.lang.String cronExpression) {

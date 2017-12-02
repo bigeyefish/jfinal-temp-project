@@ -30,11 +30,11 @@ public class TaskService {
     /**
      * 根据状态查询任务
      *
-     * @param status 状态
+     * @param isActive 是否有效状态
      * @return 任务列表
      */
-    public List<Task> queryTaskByStatus(int status) {
-        return Task.dao.find(Db.getSqlPara("index.findTaskByStatus", status));
+    public List<Task> queryTaskByStatus(boolean isActive) {
+        return Task.dao.find(Db.getSqlPara("index.findTaskByStatus", isActive));
     }
 
     /**
@@ -99,17 +99,6 @@ public class TaskService {
         if (task.getId() == null) {
             task.setCreatedBy(userId).setCreatedTime(new Date());
 
-            // 状态
-            if (task.getStartTime().getTime() > new Date().getTime()) {
-                task.setStatus(Constant.TASK_STATUS.NOT_START);
-            } else {
-                if (null != task.getEndTime() && task.getEndTime().getTime() < new Date().getTime()) {
-                    task.setStatus(Constant.TASK_STATUS.END);
-                } else {
-                    task.setStatus(Constant.TASK_STATUS.RUNNING);
-                }
-            }
-
             // 启动调度任务
             try {
                 task.setNextFireTime((Date) result.getData()).save();
@@ -133,7 +122,7 @@ public class TaskService {
     }
 
     /**
-     * 删除task
+     * 删除task 不进行物理删除
      * @param taskId taskId
      * @return Result
      */
@@ -146,9 +135,8 @@ public class TaskService {
                 return ResultFactory.createResult(Constant.ResultCode.DELETE_QUARTZ_JOB_ERROR);
             }
 
-            // 删除数据
-//            Task.dao.findById(taskId);
-//            Task.dao.deleteById(taskId);
+            // 逻辑删除数据
+            Task.dao.findById(taskId).setIsActive(false).update();
 //            Db.update("delete from job where task_id = ? and ", taskId);
             return ResultFactory.success(null);
         } catch (SchedulerException e) {
