@@ -118,7 +118,7 @@ public class UserService {
      * @return
      */
     public static User getUserBasicSecurity(int userId) {
-        return User.dao.findFirstByCache(Constant.CACHE_KEY.USER_BASIC_SEC, userId, "select * from user where id = ?", userId);
+        return User.dao.findFirst("select * from user where id = ?", userId);
     }
 
     /**

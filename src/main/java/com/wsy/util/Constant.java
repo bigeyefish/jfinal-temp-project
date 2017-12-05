@@ -25,12 +25,12 @@ public class Constant {
         public static final int FIRST_LOGIN = 1007;
         public static final int ILLEGAL_TOKEN = 1008;
         public static final int TOKEN_TIMEOUT = 1009;
-        public static final int USER_DONOT_EXIST = 1009;
-        public static final int USER_INACTIVE = 1010;
-        public static final int DUPLICATE_RESOURCE = 1011;
-        public static final int ILLEGAL_CRON = 1012;
-        public static final int DELETE_QUARTZ_JOB_ERROR = 1013;
-        public static final int SCORE_NOT_ENOUGH = 1014;
+        public static final int USER_DONOT_EXIST = 1010;
+        public static final int USER_INACTIVE = 1011;
+        public static final int DUPLICATE_RESOURCE = 1012;
+        public static final int ILLEGAL_CRON = 1013;
+        public static final int DELETE_QUARTZ_JOB_ERROR = 1014;
+        public static final int SCORE_NOT_ENOUGH = 1015;
     }
 
     static {
