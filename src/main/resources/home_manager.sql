@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : local
-Source Server Version : 50605
+Source Server Version : 50536
 Source Host           : localhost:3306
 Source Database       : home_manager
 
 Target Server Type    : MYSQL
-Target Server Version : 50605
+Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2017-11-27 00:27:55
+Date: 2017-12-05 18:08:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -36,37 +36,98 @@ INSERT INTO `family` VALUES ('1', '土豆家庭');
 DROP TABLE IF EXISTS `job`;
 CREATE TABLE `job` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `task_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `create_time` datetime DEFAULT NULL,
-  `status` int(1) DEFAULT '1',
+  `code` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '编号 - 用来防止同一天生成相同的job',
+  `task_id` int(11) NOT NULL COMMENT 'task主键',
+  `user_id` int(11) NOT NULL COMMENT '执行用户id',
+  `created_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `status` int(1) DEFAULT '1' COMMENT '状态 1 - 进行中， 2 - 已完成， 3 - 已过期， 4 - 待抢，5 - 已下线',
+  `finish_time` datetime DEFAULT NULL COMMENT '完成时间',
+  `updated_by` int(11) DEFAULT NULL,
+  `plan_amount` double(11,2) DEFAULT NULL COMMENT '计划完成数量（数字量类型需要）',
+  `finish_amount` double(11,2) DEFAULT NULL COMMENT '完成数量（数字量类型需要）',
+  `desc` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`id`),
   KEY `job_task_id` (`task_id`),
   KEY `job_user_id` (`user_id`),
   CONSTRAINT `job_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `job_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=167 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of job
 -- ----------------------------
-INSERT INTO `job` VALUES ('6', '1_2017-11-05', '1', '1', '2017-11-05 22:44:05', '1');
-INSERT INTO `job` VALUES ('7', '1_2017-11-18', '1', '2', '2017-11-18 22:25:40', '1');
-INSERT INTO `job` VALUES ('8', '1_2017-11-18', '1', '3', '2017-11-18 22:25:40', '1');
-INSERT INTO `job` VALUES ('9', '1_2017-11-18', '1', '4', '2017-11-18 22:25:40', '1');
-INSERT INTO `job` VALUES ('10', '1_2017-11-19', '1', '2', '2017-11-19 08:58:11', '1');
-INSERT INTO `job` VALUES ('11', '1_2017-11-19', '1', '3', '2017-11-19 08:58:11', '1');
-INSERT INTO `job` VALUES ('12', '1_2017-11-19', '1', '4', '2017-11-19 08:58:11', '1');
-INSERT INTO `job` VALUES ('13', '1_2017-11-20', '1', '2', '2017-11-20 21:38:08', '1');
-INSERT INTO `job` VALUES ('14', '1_2017-11-20', '1', '3', '2017-11-20 21:38:08', '1');
-INSERT INTO `job` VALUES ('15', '1_2017-11-20', '1', '4', '2017-11-20 21:38:08', '1');
-INSERT INTO `job` VALUES ('16', '1_2017-11-21', '1', '2', '2017-11-21 00:00:00', '1');
-INSERT INTO `job` VALUES ('17', '1_2017-11-21', '1', '3', '2017-11-21 00:00:00', '1');
-INSERT INTO `job` VALUES ('18', '1_2017-11-21', '1', '4', '2017-11-21 00:00:00', '1');
-INSERT INTO `job` VALUES ('19', '1_2017-11-27', '1', '2', '2017-11-27 00:00:12', '1');
-INSERT INTO `job` VALUES ('20', '1_2017-11-27', '1', '3', '2017-11-27 00:00:12', '1');
-INSERT INTO `job` VALUES ('21', '1_2017-11-27', '1', '4', '2017-11-27 00:00:12', '1');
+INSERT INTO `job` VALUES ('6', '1_2017-11-05', '1', '1', '2017-11-05 22:44:05', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('7', '1_2017-11-18', '1', '2', '2017-11-18 22:25:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('8', '1_2017-11-18', '1', '3', '2017-11-18 22:25:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('9', '1_2017-11-18', '1', '4', '2017-11-18 22:25:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('10', '1_2017-11-19', '1', '2', '2017-11-19 08:58:11', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('11', '1_2017-11-19', '1', '3', '2017-11-19 08:58:11', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('12', '1_2017-11-19', '1', '4', '2017-11-19 08:58:11', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('13', '1_2017-11-20', '1', '2', '2017-11-20 21:38:08', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('14', '1_2017-11-20', '1', '3', '2017-11-20 21:38:08', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('15', '1_2017-11-20', '1', '4', '2017-11-20 21:38:08', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('16', '1_2017-11-21', '1', '2', '2017-11-21 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('17', '1_2017-11-21', '1', '3', '2017-11-21 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('18', '1_2017-11-21', '1', '4', '2017-11-21 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('19', '1_2017-11-27', '1', '2', '2017-11-27 00:00:12', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('20', '1_2017-11-27', '1', '3', '2017-11-27 00:00:12', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('21', '1_2017-11-27', '1', '4', '2017-11-27 00:00:12', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('22', '4_2017-11-28', '4', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('23', '2_2017-11-28', '2', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('24', '7_2017-11-28', '7', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('25', '1_2017-11-28', '1', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('26', '9_2017-11-28', '9', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('27', '8_2017-11-28', '8', '2', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('28', '9_2017-11-28', '9', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('29', '2_2017-11-28', '2', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('30', '4_2017-11-28', '4', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('31', '1_2017-11-28', '1', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('32', '7_2017-11-28', '7', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('33', '8_2017-11-28', '8', '3', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('34', '1_2017-11-28', '1', '4', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('35', '7_2017-11-28', '7', '4', '2017-11-28 10:03:47', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('36', '3_2017-11-29', '3', '2', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('37', '5_2017-11-29', '5', '2', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('38', '2_2017-11-29', '2', '2', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('39', '7_2017-11-29', '7', '2', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('40', '1_2017-11-29', '1', '2', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('41', '5_2017-11-29', '5', '3', '2017-11-29 00:00:00', '2', null, null, null, null, null);
+INSERT INTO `job` VALUES ('42', '3_2017-11-29', '3', '3', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('43', '2_2017-11-29', '2', '3', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('44', '1_2017-11-29', '1', '3', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('45', '7_2017-11-29', '7', '3', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('46', '7_2017-11-29', '7', '4', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('47', '3_2017-11-29', '3', '4', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('48', '1_2017-11-29', '1', '4', '2017-11-29 00:00:00', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('49', '9_2017-11-29', '9', '2', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('50', '8_2017-11-29', '8', '2', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('51', '4_2017-11-29', '4', '2', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('52', '9_2017-11-29', '9', '3', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('53', '8_2017-11-29', '8', '3', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('54', '4_2017-11-29', '4', '3', '2017-11-29 17:24:40', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('55', '11_2017-11-29', '11', '2', '2017-11-29 18:10:54', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('56', '11_2017-11-29', '11', '3', '2017-11-29 18:10:54', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('57', '11_2017-11-29', '11', '4', '2017-11-29 18:10:54', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('147', '9_2017-12-05', '9', '2', '2017-12-05 16:06:24', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('148', '8_2017-12-05', '8', '2', '2017-12-05 16:06:24', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('149', '3_2017-12-05', '3', '2', '2017-12-05 16:06:24', '1', null, null, '3000.00', null, null);
+INSERT INTO `job` VALUES ('150', '1_2017-12-05', '1', '2', '2017-12-05 16:06:24', '1', null, null, '1.00', null, null);
+INSERT INTO `job` VALUES ('151', '4_2017-12-05', '4', '2', '2017-12-05 16:06:24', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('152', '6_2017-12-05', '6', '2', '2017-12-05 16:06:24', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('153', '9_2017-12-05', '9', '3', '2017-12-05 16:06:24', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('154', '6_2017-12-05', '6', '3', '2017-12-05 16:06:24', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('155', '2_2017-12-05', '2', '2', '2017-12-05 16:06:24', '1', null, null, '40.00', null, null);
+INSERT INTO `job` VALUES ('156', '7_2017-12-05', '7', '2', '2017-12-05 16:06:24', '1', null, null, '30.00', null, null);
+INSERT INTO `job` VALUES ('157', '6_2017-12-05', '6', '4', '2017-12-05 16:06:24', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('158', '4_2017-12-05', '4', '3', '2017-12-05 16:06:24', '1', null, null, null, null, null);
+INSERT INTO `job` VALUES ('159', '7_2017-12-05', '7', '3', '2017-12-05 16:06:24', '1', null, null, '30.00', null, null);
+INSERT INTO `job` VALUES ('160', '8_2017-12-05', '8', '3', '2017-12-05 16:06:24', '4', null, null, null, null, null);
+INSERT INTO `job` VALUES ('161', '2_2017-12-05', '2', '3', '2017-12-05 16:06:24', '1', null, null, '40.00', null, null);
+INSERT INTO `job` VALUES ('162', '7_2017-12-05', '7', '4', '2017-12-05 16:06:24', '1', null, null, '30.00', null, null);
+INSERT INTO `job` VALUES ('163', '1_2017-12-05', '1', '3', '2017-12-05 16:06:24', '1', null, null, '1.00', null, null);
+INSERT INTO `job` VALUES ('164', '3_2017-12-05', '3', '3', '2017-12-05 16:06:24', '1', null, null, '3000.00', null, null);
+INSERT INTO `job` VALUES ('165', '3_2017-12-05', '3', '4', '2017-12-05 16:06:24', '1', null, null, '3000.00', null, null);
+INSERT INTO `job` VALUES ('166', '1_2017-12-05', '1', '4', '2017-12-05 16:06:24', '1', null, null, '1.00', null, null);
 
 -- ----------------------------
 -- Table structure for `permission`
@@ -77,8 +138,8 @@ CREATE TABLE `permission` (
   `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '权限名称',
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='权限表';
 
@@ -101,8 +162,8 @@ CREATE TABLE `permission_resource` (
   `resource_id` int(11) NOT NULL,
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `permission_resource_oper_id` (`permission_id`,`resource_id`) USING BTREE,
   KEY `permission_id` (`permission_id`),
@@ -162,12 +223,12 @@ CREATE TABLE `resource` (
   `type` tinyint(2) DEFAULT NULL COMMENT '资源类型（1-菜单 2-数据 3-按钮 4-文件）',
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   `isactive` tinyint(1) DEFAULT '1' COMMENT '是否有效（0-无效 1-有效）',
   `visible` tinyint(1) DEFAULT '1' COMMENT '1可见，2不可见',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='资源表';
+) ENGINE=InnoDB AUTO_INCREMENT=165 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='资源表';
 
 -- ----------------------------
 -- Records of resource
@@ -204,9 +265,10 @@ INSERT INTO `resource` VALUES ('93', 'change_pwd', '修改密码', 'changePwd', 
 INSERT INTO `resource` VALUES ('153', '0_4_', '组合列表', 'list', null, 'Blank', '1', '4', '1', '1', '1', '2017-09-23 15:12:39', '2017-11-18 12:12:11', '1', '1');
 INSERT INTO `resource` VALUES ('154', '0_4_153', '', '', null, 'portfolio/portfolioList', '1', '153', '1', '1', '1', '2017-09-23 15:24:50', '2017-11-18 12:12:24', '1', '0');
 INSERT INTO `resource` VALUES ('156', '0_4_153', '组合详情', ':id', null, 'portfolio/portfolioDetail', '2', '153', '1', '1', '1', '2017-10-10 16:25:27', '2017-11-18 12:12:25', '1', '0');
-INSERT INTO `resource` VALUES ('161', '0_', '任务管理', '/task', null, 'layout/Layout', '1', '0', '1', '1', '1', '2017-11-20 21:52:26', '2017-11-20 21:53:17', '1', '1');
+INSERT INTO `resource` VALUES ('161', '0_', '任务管理', '/task', 'zonghe', 'layout/Layout', '1', '0', '1', '1', '1', '2017-11-20 21:52:26', '2017-11-20 21:53:17', '1', '1');
 INSERT INTO `resource` VALUES ('162', '0_161_', '任务列表', 'list', null, 'Blank', '1', '161', '1', '1', '1', '2017-11-20 21:54:16', '2017-11-20 21:54:16', '1', '1');
 INSERT INTO `resource` VALUES ('163', '0_161_', ' ', '', null, 'task/list', '1', '162', '1', '1', '1', '2017-11-20 21:56:16', '2017-11-20 22:26:55', '1', '0');
+INSERT INTO `resource` VALUES ('164', '0_161_', '我的job', 'job_list', null, 'task/jobList', '1', '161', '1', '1', '1', '2017-12-05 15:33:19', '2017-12-05 15:33:21', '1', '1');
 
 -- ----------------------------
 -- Table structure for `role`
@@ -217,8 +279,8 @@ CREATE TABLE `role` (
   `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '名称',
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='角色表';
 
@@ -250,8 +312,8 @@ CREATE TABLE `role_permission` (
   `permission_id` int(11) NOT NULL,
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_permission_id` (`role_id`,`permission_id`) USING BTREE,
   KEY `permission_id` (`permission_id`),
@@ -279,35 +341,64 @@ INSERT INTO `role_permission` VALUES ('190', '1', '14', '5', '5', '2017-09-06 19
 INSERT INTO `role_permission` VALUES ('191', '6', '1', '1', '1', '2017-09-27 17:29:33', '2017-09-27 17:29:33');
 
 -- ----------------------------
+-- Table structure for `score_flow`
+-- ----------------------------
+DROP TABLE IF EXISTS `score_flow`;
+CREATE TABLE `score_flow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `score` double(11,2) NOT NULL COMMENT '交易分数',
+  `created_time` datetime NOT NULL COMMENT '时间',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `job_id` int(11) NOT NULL COMMENT 'job 主键',
+  `before_score` double(11,2) NOT NULL COMMENT '交易前分值',
+  `after_score` double(11,2) NOT NULL COMMENT '交易后分值',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='分值流水';
+
+-- ----------------------------
+-- Records of score_flow
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `task`
 -- ----------------------------
 DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `desc` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_time` datetime DEFAULT NULL,
-  `type` int(2) DEFAULT NULL COMMENT '类型 1 - 共同，2 - 竞争',
+  `name` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '名称',
+  `desc` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '描述',
+  `created_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `type` int(2) NOT NULL COMMENT '类型 1 - 个人，2 - 竞争，3 - 共同，4 - 轮流',
   `score` int(11) DEFAULT NULL COMMENT '分值',
   `created_by` int(11) DEFAULT NULL COMMENT '创建者',
-  `priority` int(1) DEFAULT NULL COMMENT '优先级',
+  `priority` int(1) NOT NULL COMMENT '优先级 1 - 紧急重要，2 - 紧急不重要， 3 - 重要不激进， 4 - 不重要不紧急',
   `end_time` datetime DEFAULT NULL COMMENT '结束日期',
   `alarm_type` int(2) DEFAULT NULL COMMENT '提醒类型',
-  `status` int(11) DEFAULT '1',
-  `cron_expression` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `next_fire_time` datetime DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1 - 有效，0 - 无效（下架）',
+  `cron_expression` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '触发频率表达式',
+  `next_fire_time` datetime DEFAULT NULL COMMENT '下次触发时间',
   `amount` double(11,2) DEFAULT NULL COMMENT '数量',
   `unit` int(2) DEFAULT NULL COMMENT '单位',
-  `measure_type` int(2) DEFAULT '1' COMMENT '度量标准 1-数字 2-开关',
-  `startTime` datetime DEFAULT NULL,
-  `delay_type` int(2) DEFAULT NULL,
+  `measure_type` int(2) NOT NULL DEFAULT '1' COMMENT '度量标准 1 - 数字，2 - 开关',
+  `start_time` datetime NOT NULL COMMENT '开始时间',
+  `expire_type` int(2) NOT NULL COMMENT '过期类型 1 - 本日有效，2 - 本周有效，3 - 7天有效， 4 - 本月有效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of task
 -- ----------------------------
-INSERT INTO `task` VALUES ('1', '吃水果', '每天一个水果', '2017-11-04 22:23:07', '2', '5', '2', '4', null, null, '1', '0 * * * * ?', '2017-11-27 00:01:00', '1.00', '1', '1', null, null);
+INSERT INTO `task` VALUES ('1', '吃水果', '每天吃一个水果', '2017-11-04 22:23:07', '1', '5', '2', '4', null, null, '1', '0 0 0 * * ?', '2017-12-06 00:00:00', '1.00', '1', '1', '2017-11-27 00:00:00', '1');
+INSERT INTO `task` VALUES ('2', '背单词', '每天40个单词', '2017-11-27 16:54:40', '1', '5', '2', '3', null, null, '1', '0 0 0 * * ?', '2017-12-06 00:00:00', '40.00', '1', '1', '2017-11-27 16:56:16', '1');
+INSERT INTO `task` VALUES ('3', '跑步', '每周三次', '2017-11-27 17:00:37', '1', '6', '2', '2', null, null, '1', '0 0 0 ? * MON,WED,SAT', '2017-11-27 00:00:00', '3000.00', '2', '1', '2017-11-27 00:00:00', '4');
+INSERT INTO `task` VALUES ('4', '羽毛球', '每周两次', '2017-11-27 17:03:22', '3', '6', '2', '2', null, null, '1', '0 0 0 ? * TUE,THU', '2017-11-28 00:00:00', null, null, '2', '2017-11-27 00:00:00', '2');
+INSERT INTO `task` VALUES ('5', '拖地', '每周两次', '2017-11-27 17:06:50', '4', '3', '2', '3', null, null, '1', '0 0 0 ? * WED,SUN', '2017-12-06 00:00:00', null, null, '2', '2017-11-27 00:00:00', '1');
+INSERT INTO `task` VALUES ('6', '周会', '每周日', '2017-11-27 17:08:19', '3', '4', '2', '2', null, null, '1', '0 0 0 ? * L', '2017-12-02 00:00:00', null, null, '2', '2017-11-27 00:00:00', '3');
+INSERT INTO `task` VALUES ('7', '读书', '每天至少30分钟', '2017-11-27 17:13:43', '1', '6', '2', '4', null, null, '1', '0 0 0 * * ?', '2017-12-06 00:00:00', '30.00', '3', '1', '2017-11-27 17:14:19', '1');
+INSERT INTO `task` VALUES ('8', '做早餐', '每周两次', '2017-11-27 17:16:21', '2', '6', '2', '2', null, null, '1', '0 0 0 ? * MON,TUE', '2017-12-11 00:00:00', null, null, '2', '2017-11-27 17:17:17', '1');
+INSERT INTO `task` VALUES ('9', '做正餐', '每周两次', '2017-11-27 17:19:37', '2', '6', '2', '2', null, null, '1', '0 0 0 ? * MON,TUE', '2017-12-11 00:00:00', null, null, '2', '2017-11-27 17:20:23', '1');
+INSERT INTO `task` VALUES ('10', '大扫除', '每个月最后一个星期六', '2017-11-27 17:21:19', '3', '6', '2', '2', null, null, '1', '0 0 0 ? * 6L', '2017-12-29 00:00:00', null, null, '2', '2017-11-27 00:00:00', '4');
+INSERT INTO `task` VALUES ('11', '刷牙', '每天要刷牙', '2017-11-29 18:07:59', '1', '0', '2', '1', null, null, '0', '0 0 0 * * ?', '2017-11-29 00:00:00', '0.00', '1', '1', '2017-11-29 00:00:00', '1');
 
 -- ----------------------------
 -- Table structure for `task_user`
@@ -325,16 +416,41 @@ CREATE TABLE `task_user` (
 INSERT INTO `task_user` VALUES ('1', '2');
 INSERT INTO `task_user` VALUES ('1', '3');
 INSERT INTO `task_user` VALUES ('1', '4');
+INSERT INTO `task_user` VALUES ('2', '2');
+INSERT INTO `task_user` VALUES ('2', '3');
+INSERT INTO `task_user` VALUES ('3', '2');
+INSERT INTO `task_user` VALUES ('3', '3');
+INSERT INTO `task_user` VALUES ('3', '4');
+INSERT INTO `task_user` VALUES ('4', '2');
+INSERT INTO `task_user` VALUES ('4', '3');
+INSERT INTO `task_user` VALUES ('5', '2');
+INSERT INTO `task_user` VALUES ('5', '3');
+INSERT INTO `task_user` VALUES ('6', '2');
+INSERT INTO `task_user` VALUES ('6', '3');
+INSERT INTO `task_user` VALUES ('6', '4');
+INSERT INTO `task_user` VALUES ('7', '2');
+INSERT INTO `task_user` VALUES ('7', '3');
+INSERT INTO `task_user` VALUES ('7', '4');
+INSERT INTO `task_user` VALUES ('8', '2');
+INSERT INTO `task_user` VALUES ('8', '3');
+INSERT INTO `task_user` VALUES ('9', '2');
+INSERT INTO `task_user` VALUES ('9', '3');
+INSERT INTO `task_user` VALUES ('10', '2');
+INSERT INTO `task_user` VALUES ('10', '3');
+INSERT INTO `task_user` VALUES ('10', '4');
+INSERT INTO `task_user` VALUES ('11', '2');
+INSERT INTO `task_user` VALUES ('11', '3');
+INSERT INTO `task_user` VALUES ('11', '4');
 
 -- ----------------------------
 -- Table structure for `user`
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户ID',
   `user_name` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '用户名',
-  `nick_name` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户昵称',
-  `password` varchar(36) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '密码',
+  `nick_name` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '用户昵称',
+  `password` varchar(36) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码',
   `age` int(3) DEFAULT NULL COMMENT '年龄',
   `last_login` datetime DEFAULT NULL COMMENT '最后登录时间',
   `family_id` int(11) DEFAULT NULL COMMENT '家庭编号',
@@ -348,7 +464,8 @@ CREATE TABLE `user` (
   `update_by` int(11) DEFAULT NULL COMMENT '修改者',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   `update_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `token` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `token` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '登录凭证',
+  `score` double(11,0) NOT NULL DEFAULT '0' COMMENT '账户总分数',
   PRIMARY KEY (`id`),
   KEY `user_family_id` (`family_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`family_id`) REFERENCES `family` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -357,10 +474,10 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('1', 'admin', 'admin', '915d46552c671efa1eb7753a090eb10', null, '2017-11-14 00:01:37', null, '1', 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '');
-INSERT INTO `user` VALUES ('2', 'wangshiyu', '土豆爸爸', '959ba35982e3f5aacfd1ac32a71213de', '30', '2017-11-27 00:10:35', '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '3tMLYrVL5nisdn1RChk6SoEgBv4PDl/MX1qiJ6yCjrM=');
-INSERT INTO `user` VALUES ('3', 'qinting', '土豆妈妈', '959ba35982e3f5aacfd1ac32a71213de', '30', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
-INSERT INTO `user` VALUES ('4', 'wanghaiyu', '土豆', '959ba35982e3f5aacfd1ac32a71213de', '4', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null);
+INSERT INTO `user` VALUES ('1', 'admin', 'admin', '915d46552c671efa1eb7753a090eb10', null, '2017-11-14 00:01:37', null, '1', 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '', '0');
+INSERT INTO `user` VALUES ('2', 'wangshiyu', '土豆爸爸', '959ba35982e3f5aacfd1ac32a71213de', '30', '2017-11-28 15:11:18', '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, '3tMLYrVL5nisdn1RChk6SmF3+JwbQqXwkC3VYzpfq4s=', '0');
+INSERT INTO `user` VALUES ('3', 'qinting', '土豆妈妈', '959ba35982e3f5aacfd1ac32a71213de', '30', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null, '0');
+INSERT INTO `user` VALUES ('4', 'wanghaiyu', '土豆', '959ba35982e3f5aacfd1ac32a71213de', '4', null, '1', null, 'http://7xr387.com1.z0.glb.clouddn.com/little_rabbit.gif', null, null, '1', '1', null, null, null, null, null, '0');
 
 -- ----------------------------
 -- Table structure for `user_role`
@@ -372,8 +489,8 @@ CREATE TABLE `user_role` (
   `role_id` int(11) NOT NULL COMMENT '角色主键',
   `creator_id` int(11) DEFAULT NULL,
   `updator_id` int(11) DEFAULT NULL,
-  `ctime` datetime DEFAULT CURRENT_TIMESTAMP,
-  `utime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ctime` datetime DEFAULT NULL,
+  `utime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_role_id` (`user_id`,`role_id`) USING BTREE,
   KEY `role_id` (`role_id`),
