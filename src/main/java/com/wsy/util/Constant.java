@@ -30,6 +30,7 @@ public class Constant {
         public static final int DUPLICATE_RESOURCE = 1011;
         public static final int ILLEGAL_CRON = 1012;
         public static final int DELETE_QUARTZ_JOB_ERROR = 1013;
+        public static final int SCORE_NOT_ENOUGH = 1014;
     }
 
     static {
@@ -49,6 +50,7 @@ public class Constant {
         codeMap.put(ResultCode.DUPLICATE_RESOURCE, "存在相同的资源");
         codeMap.put(ResultCode.ILLEGAL_CRON, "cron表达式非法");
         codeMap.put(ResultCode.DELETE_QUARTZ_JOB_ERROR, "删除quartz中job失败");
+        codeMap.put(ResultCode.SCORE_NOT_ENOUGH, "剩余分值不足");
     }
 
     /* 任务类型 1-个人 2-竞争 3- 共同 4轮流*/
@@ -78,7 +80,7 @@ public class Constant {
     }
 
     /* 放在JobDataMap中的task信息的key */
-    public static final String KEY_TASK_INFO = "TASK_INFO";
+    public static final String KEY_TASK_ID = "TASK_ID";
 
     /* task状态（根据起止时间计算）*/
     public static class TASK_STATUS {
@@ -87,13 +89,21 @@ public class Constant {
         public static final String END = "已结束";
     }
 
+    /* job状态 运行中、已完成、已过期、已下线、待抢 */
+    public static class JOB_STATUS {
+        public static final int RUNNING = 1;
+        public static final int FINISHED = 2;
+        public static final int EXPIRED = 3;
+        public static final int TO_BE_GRAB = 4;
+        public static final int OFF_LINE  = 5;
+    }
+
     /* 延期类型 - 本日、本周、一周、本月 */
     public static class EXPIRE_TYPE {
-        public static final int CUR_TODAY = 1;
+        public static final int CUR_DAY = 1;
         public static final int CUR_WEEK = 2;
         public static final int WEEK_DAYS = 3;
         public static final int CUR_MONTH = 4;
     }
-
 }
 

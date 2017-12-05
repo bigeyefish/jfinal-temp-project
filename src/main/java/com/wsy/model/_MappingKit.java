@@ -23,6 +23,7 @@ public class _MappingKit {
 		arp.addMapping("resource", "id", Resource.class);
 		arp.addMapping("role", "id", Role.class);
 		arp.addMapping("role_permission", "id", RolePermission.class);
+		arp.addMapping("score_flow", "id", ScoreFlow.class);
 		arp.addMapping("task", "id", Task.class);
 		// Composite Primary Key order: task_id,user_id
 		arp.addMapping("task_user", "task_id,user_id", TaskUser.class);

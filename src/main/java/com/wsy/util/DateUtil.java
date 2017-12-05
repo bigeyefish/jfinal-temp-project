@@ -1,0 +1,55 @@
+package com.wsy.util;
+
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * Created by sanyihwang on 2017/12/5.
+ */
+public class DateUtil {
+
+    /**
+     * 判断两个date是否是相同时间 （如果都为null认为是相同）
+     *
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static boolean isEqual(Date date1, Date date2) {
+        if (null == date1 && null == date2) {
+            return true;
+        }
+        if (date1 != null && date2 != null) {
+            return date1.getTime() == date2.getTime();
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * task有效期限计算
+     *
+     * @param createdDate task生成时间
+     * @param expireType  task过期类型
+     * @return 失效时间
+     */
+    public static Date getTaskExpireDate(Date createdDate, int expireType) {
+        switch (expireType) {
+            case Constant.EXPIRE_TYPE.CUR_DAY:
+                return createdDate;
+            case Constant.EXPIRE_TYPE.CUR_MONTH:
+                return DateUtils.ceiling(createdDate, Calendar.MONTH);
+            case Constant.EXPIRE_TYPE.CUR_WEEK:
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(createdDate);
+                calendar.add(Calendar.DAY_OF_YEAR, 7 - calendar.get(Calendar.DAY_OF_WEEK + 1));
+                return calendar.getTime();
+            case Constant.EXPIRE_TYPE.WEEK_DAYS:
+                return DateUtils.addDays(createdDate, 7);
+            default:
+                return null;
+        }
+    }
+}

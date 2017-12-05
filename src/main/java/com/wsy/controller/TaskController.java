@@ -6,9 +6,9 @@ import com.jfinal.core.Controller;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.ext.interceptor.POST;
 import com.jfinal.kit.Kv;
+import com.wsy.model.Job;
 import com.wsy.model.Task;
 import com.wsy.model.User;
-import com.wsy.model.biz.Result;
 import com.wsy.service.TaskService;
 
 import java.util.ArrayList;
@@ -31,6 +31,13 @@ public class TaskController extends Controller{
     public void queryFamilyTask() {
         Kv kv = getSessionAttr("userInfo");
         renderJson(taskService.queryFamilyTask(((User)kv.get("user")).getFamilyId(), getParaToInt(0), getParaToInt(1)));
+    }
+
+    /**
+     * 查询当前登录人job列表
+     */
+    public void queryMyJob() {
+        renderJson(taskService.queryJobByUserId(getSessionAttr("userId"), getParaToInt(0), getParaToInt(1), getParaMap()));
     }
 
     /**
@@ -63,5 +70,14 @@ public class TaskController extends Controller{
     @Before(POST.class)
     public void deleteTask() {
         renderJson(taskService.deleteTask(getParaToInt("taskId")));
+    }
+
+    /**
+     * 完成任务
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void finishJob() {
+        renderJson(taskService.finishJob(getBean(Job.class, ""), getSessionAttr("userId")));
     }
 }

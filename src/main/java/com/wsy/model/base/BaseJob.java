@@ -45,13 +45,13 @@ public abstract class BaseJob<M extends BaseJob<M>> extends Model<M> implements 
 		return getInt("user_id");
 	}
 
-	public M setCreateTime(java.util.Date createTime) {
-		set("create_time", createTime);
+	public M setCreatedTime(java.util.Date createdTime) {
+		set("created_time", createdTime);
 		return (M)this;
 	}
 
-	public java.util.Date getCreateTime() {
-		return get("create_time");
+	public java.util.Date getCreatedTime() {
+		return get("created_time");
 	}
 
 	public M setStatus(java.lang.Integer status) {
@@ -61,6 +61,51 @@ public abstract class BaseJob<M extends BaseJob<M>> extends Model<M> implements 
 
 	public java.lang.Integer getStatus() {
 		return getInt("status");
+	}
+
+	public M setFinishTime(java.util.Date finishTime) {
+		set("finish_time", finishTime);
+		return (M)this;
+	}
+
+	public java.util.Date getFinishTime() {
+		return get("finish_time");
+	}
+
+	public M setUpdatedBy(java.lang.Integer updatedBy) {
+		set("updated_by", updatedBy);
+		return (M)this;
+	}
+
+	public java.lang.Integer getUpdatedBy() {
+		return getInt("updated_by");
+	}
+
+	public M setPlanAmount(java.lang.Double planAmount) {
+		set("plan_amount", planAmount);
+		return (M)this;
+	}
+
+	public java.lang.Double getPlanAmount() {
+		return getDouble("plan_amount");
+	}
+
+	public M setFinishAmount(java.lang.Double finishAmount) {
+		set("finish_amount", finishAmount);
+		return (M)this;
+	}
+
+	public java.lang.Double getFinishAmount() {
+		return getDouble("finish_amount");
+	}
+
+	public M setDesc(java.lang.String desc) {
+		set("desc", desc);
+		return (M)this;
+	}
+
+	public java.lang.String getDesc() {
+		return getStr("desc");
 	}
 
 }

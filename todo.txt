@@ -1,9 +1,14 @@
-1、删除功能
-2、task表增加isActive字段
-3、task status字段去掉
-4、确定job字段
-5、确定可编辑字段
-6、编辑保存
-7、增加表，分数历史
-8、增加字段，总分数
-9、job增加字段 amount/finishTime/updated_by/
+1、删除功能（完成）
+2、task表增加isActive字段（完成）
+3、task status字段去掉（完成）
+4、确定job字段（完成）
+5、确定可编辑字段（完成）
+6、编辑保存（完成）
+7、增加表，分数历史（完成）
+8、增加字段，总分数（完成）
+9、job增加字段 amount/finishTime/updated_by/（完成）
+10、生成job逻辑修改，type（完成）
+
+11、定期打印 jobs 和 triggers
+12、job页面
+13、定时任务，修改job状态

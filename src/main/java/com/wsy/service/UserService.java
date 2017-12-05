@@ -2,6 +2,7 @@ package com.wsy.service;
 
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
+import com.wsy.model.ScoreFlow;
 import com.wsy.model.User;
 import com.wsy.model.biz.Result;
 import com.wsy.service.privilege.ResourceService;
@@ -118,5 +119,32 @@ public class UserService {
      */
     public static User getUserBasicSecurity(int userId) {
         return User.dao.findFirstByCache(Constant.CACHE_KEY.USER_BASIC_SEC, userId, "select * from user where id = ?", userId);
+    }
+
+    /**
+     * 增加或者扣减分值
+     * @param userId
+     * @param score
+     * @param jobId
+     */
+    public Result addScore(int userId, double score, int jobId) {
+        User user = User.dao.findById(userId);
+        double beforeScore = user.getScore();
+        if (user.getScore() + score < 0) {
+            return ResultFactory.error(Constant.ResultCode.SCORE_NOT_ENOUGH);
+        }
+
+        user.setScore(beforeScore + score).update();
+
+        ScoreFlow scoreFlow = new ScoreFlow();
+        scoreFlow.setScore(score);
+        scoreFlow.setCreatedTime(new Date());
+        scoreFlow.setUserId(userId);
+        scoreFlow.setJobId(jobId);
+        scoreFlow.setBeforeScore(beforeScore);
+        scoreFlow.setAfterScore(beforeScore + score);
+        scoreFlow.save();
+
+        return ResultFactory.success(beforeScore + score);
     }
 }

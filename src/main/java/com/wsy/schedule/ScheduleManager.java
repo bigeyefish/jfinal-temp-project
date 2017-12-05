@@ -52,16 +52,34 @@ public class ScheduleManager {
     public static Date startTask(Task task) throws SchedulerException {
         // 创建JobDetail
         JobDetail jobDetail = JobBuilder.newJob(MyJob.class).withIdentity(task.getId().toString()).build();
-        jobDetail.getJobDataMap().put(Constant.KEY_TASK_INFO, task);
+        jobDetail.getJobDataMap().put(Constant.KEY_TASK_ID, task.getId());
 
         // 创建trigger
-        TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(task.getId().toString()).startAt(task.getStartTime()).
+        TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(task.getId().toString()).
+                startAt(null == task.getNextFireTime() ? task.getStartTime() : task.getNextFireTime()).
                 withSchedule(CronScheduleBuilder.cronSchedule(task.getCronExpression()));
         if (task.getEndTime() != null) {
             triggerBuilder.endAt(task.getEndTime());
         }
         CronTrigger trigger = triggerBuilder.build();
         scheduler.scheduleJob(jobDetail, trigger);
+        return trigger.getNextFireTime();
+    }
+
+    /**
+     * 更新task
+     * @param task
+     */
+    public static Date updateTask(Task task) throws SchedulerException {
+
+        TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(task.getId().toString()).
+                startAt(null == task.getNextFireTime() ? task.getStartTime() : task.getNextFireTime()).
+                withSchedule(CronScheduleBuilder.cronSchedule(task.getCronExpression()));
+        if (task.getEndTime() != null) {
+            triggerBuilder.endAt(task.getEndTime());
+        }
+        CronTrigger trigger = triggerBuilder.build();
+        scheduler.rescheduleJob(TriggerKey.triggerKey(task.getId().toString()), trigger);
         return trigger.getNextFireTime();
     }
 

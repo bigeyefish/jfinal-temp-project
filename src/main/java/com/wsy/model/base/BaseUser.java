@@ -171,4 +171,13 @@ public abstract class BaseUser<M extends BaseUser<M>> extends Model<M> implement
 		return getStr("token");
 	}
 
+	public M setScore(java.lang.Double score) {
+		set("score", score);
+		return (M)this;
+	}
+
+	public java.lang.Double getScore() {
+		return getDouble("score");
+	}
+
 }

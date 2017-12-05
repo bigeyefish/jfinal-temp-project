@@ -2,6 +2,7 @@ package com.wsy.schedule;
 
 import com.jfinal.ext.kit.DateKit;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 import com.wsy.model.Task;
 import com.wsy.service.TaskService;
 import com.wsy.util.Constant;
@@ -29,9 +30,9 @@ public class MyJob implements Job {
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        Task task = (Task) jobExecutionContext.getJobDetail().getJobDataMap().get(Constant.KEY_TASK_INFO);
+        int taskId = (int)jobExecutionContext.getJobDetail().getJobDataMap().get(Constant.KEY_TASK_ID);
 
-        String jobCode = task.getId() + "_" + DateKit.toStr(new Date());
+        String jobCode = taskId + "_" + DateKit.toStr(new Date());
 
         // 检查是否已经生成job
         List<com.wsy.model.Job> jobList = taskService.queryJobByCode(jobCode);
@@ -40,10 +41,30 @@ public class MyJob implements Job {
             return;
         }
 
+        Task task = taskService.queryById(taskId);
+
         // 生成job
         List<com.wsy.model.Job> newJobList = new ArrayList<>();
 
-        newJobList.addAll(taskService.queryExecutorsById(task.getId()).stream().map(record -> MyJob.jobGenerator(task, jobCode, record.getInt("user_id"))).collect(Collectors.toList()));
+        // 执行人
+        List<Record> executorList = taskService.queryExecutorsById(task.getId());
+
+        if (task.getType() == Constant.TaskType.BYTURN) {
+            // 轮流类型要先找到上一次执行的人
+            com.wsy.model.Job job = taskService.queryLastFinishedJob(taskId);
+            int index = 0;
+            if (null != job) {
+                for (int i = 0; i < executorList.size(); i++) {
+                    if (executorList.get(i).get("user_id") == job.getUserId()) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            newJobList.add(MyJob.jobGenerator(task, jobCode, executorList.get(index % executorList.size()).getInt("user_id")));
+        } else {
+            newJobList.addAll(executorList.stream().map(record -> MyJob.jobGenerator(task, jobCode, record.getInt("user_id"))).collect(Collectors.toList()));
+        }
 
         Db.batchSave(newJobList, 100);
         task.setNextFireTime(jobExecutionContext.getNextFireTime()).update();
@@ -60,7 +81,9 @@ public class MyJob implements Job {
         job.setCode(code);
         job.setTaskId(task.getId());
         job.setUserId(userId);
-        job.setCreateTime(new Date());
+        job.setCreatedTime(new Date());
+        job.setStatus(task.getType() == Constant.TaskType.COMPETE ? Constant.JOB_STATUS.TO_BE_GRAB : Constant.JOB_STATUS.RUNNING);
+        job.setPlanAmount(task.getAmount());
         return job;
     }
 }

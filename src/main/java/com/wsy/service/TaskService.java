@@ -1,7 +1,10 @@
 package com.wsy.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
+import com.jfinal.json.JFinalJson;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 import com.wsy.model.Job;
@@ -10,22 +13,28 @@ import com.wsy.model.TaskUser;
 import com.wsy.model.biz.Result;
 import com.wsy.schedule.ScheduleManager;
 import com.wsy.util.Constant;
+import com.wsy.util.DateUtil;
 import com.wsy.util.LogUtil;
 import com.wsy.util.ResultFactory;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
-import sun.rmi.runtime.Log;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 任务服务类
  * Created by Lenovo on 2017/11/4.
  */
 public class TaskService {
+
+    private static String EDITABLE_FIELD[] = { "name", "desc", "type", "score", "priority", "alarm_type", "amount",
+            "unit", "measure_type", "expire_type",  "end_time", "cron_expression", "start_time" };
+
+    private UserService userService = new UserService();
 
     /**
      * 根据状态查询任务
@@ -54,7 +63,7 @@ public class TaskService {
      * @return result
      */
     public List<Record> queryExecutorsById(int taskId) {
-        return Db.find("select t.*, t1.nick_name from task_user t left join user t1 on t.user_id = t1.id where t.task_id = ? ", taskId);
+        return Db.find("select t.*, t1.nick_name from task_user t left join user t1 on t.user_id = t1.id where t.task_id = ? order by t.user_id", taskId);
     }
 
     /**
@@ -63,7 +72,9 @@ public class TaskService {
      * @return result
      */
     public Result queryFamilyTask(int familyid, int page, int size) {
-        return ResultFactory.success(Task.dao.paginate(page, size, "select *", "from task where id in (select task_id from task_user where user_id in (select id from user where family_id = ?))", familyid));
+        return ResultFactory.success(Task.dao.paginate(page, size, "select *",
+                "from task where is_active = 1 and id in (select task_id from task_user where user_id in " +
+                        "(select id from user where family_id = ?))", familyid));
     }
 
     /**
@@ -78,6 +89,15 @@ public class TaskService {
         } catch (ParseException e) {
             return ResultFactory.createResult(Constant.ResultCode.ILLEGAL_CRON);
         }
+    }
+
+    /**
+     * 根据id查数据
+     * @param taskId taskId
+     * @return Task
+     */
+    public Task queryById(int taskId) {
+        return Task.dao.findById(taskId);
     }
 
     /**
@@ -117,12 +137,42 @@ public class TaskService {
                 LogUtil.LogType.errorLog.error("start task {} error: ", task.getName(), e.getMessage());
             }
 
+        } else {
+            try {
+                // 先把原来的查出来
+                Task oldTask = queryById(task.getId());
+
+                // 需要替换schedule中task字段 end_time, cron_expression, startTime,
+                if (!task.getCronExpression().equals(oldTask.getCronExpression()) || task.getStartTime().getTime() != oldTask.getStartTime().getTime() ||
+                       !DateUtil.isEqual(task.getEndTime(), oldTask.getEndTime())) {
+                    oldTask.setNextFireTime(ScheduleManager.updateTask(task));
+                }
+
+                // 可编辑直接保存字段 name, desc, type, score, priority, alarm_type, amount, unit, measure_type, expire_type
+                for (String field : EDITABLE_FIELD) {
+                    oldTask.set(field, task.get(field));
+                }
+
+                // 保存task
+                oldTask.update();
+                Db.update("delete from task_user where task_id = ?", task.getId());
+                List<TaskUser> taskUserList = new ArrayList<>();
+                for (Integer user : executorList) {
+                    taskUserList.add(new TaskUser().setTaskId(task.getId()).setUserId(user));
+                }
+                Db.batchSave(taskUserList, 100);
+                LogUtil.LogType.taskLog.info("update task {} success, next fire time is: {}", task.getName(), oldTask.getNextFireTime());
+                return ResultFactory.success(oldTask.getNextFireTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtil.LogType.errorLog.error("update task {} error: ", task.getName(), e.getMessage());
+            }
         }
         return ResultFactory.error(null);
     }
 
     /**
-     * 删除task 不进行物理删除
+     * 删除task (不进行物理删除)
      * @param taskId taskId
      * @return Result
      */
@@ -136,13 +186,89 @@ public class TaskService {
             }
 
             // 逻辑删除数据
-            Task.dao.findById(taskId).setIsActive(false).update();
-//            Db.update("delete from job where task_id = ? and ", taskId);
+            queryById(taskId).setIsActive(false).update();
+            Db.update("update job set status = ? where task_id = ? ", Constant.JOB_STATUS.OFF_LINE, taskId);
             return ResultFactory.success(null);
         } catch (SchedulerException e) {
             e.printStackTrace();
             LogUtil.LogType.errorLog.error("delete task [{}] error: {}", taskId, e.getMessage());
         }
         return ResultFactory.error(null);
+    }
+
+    /**
+     * 根据taskId查询最后一次执行完成的job记录
+     * @param taskId taskId
+     * @return Job
+     */
+    public Job queryLastFinishedJob(int taskId) {
+        return Job.dao.findFirst("select * from job where task_id = ? and status = ?", taskId, Constant.JOB_STATUS.FINISHED);
+    }
+
+    /**
+     * 查询人员对应的job列表
+     * @param userId 用户id
+     * @param page 页码
+     * @param size 数量
+     * @param queryParam 查询参数
+     * @return job列表
+     */
+    public Result queryJobByUserId(int userId, int page, int size, Map<String, String[]> queryParam) {
+        StringBuilder sql = new StringBuilder("from job t left join task t1 on t.task_id = t1.id where t.user_id = ?");
+        List<Object> param = new ArrayList<>();
+        param.add(userId);
+        if (queryParam.get("name") != null) {
+            sql.append(" and t1.name like concat('%', ?, '%')");
+            param.add(queryParam.get("name")[0]);
+        }
+        if (queryParam.get("status") != null) {
+            sql.append(" and t.status = ?");
+            param.add(queryParam.get("status")[0]);
+        }
+        sql.append(" order by t.created_time desc");
+        Page<Record> result = Db.paginate(page, size, "select t.*, t1.name, t1.type, t1.priority, t1.unit, t1.expire_type, t1.score, t1.measure_type",
+                sql.toString(), param.toArray());
+        for (Record record : result.getList()) {
+            record.set("expireDate", DateUtil.getTaskExpireDate(record.getDate("created_time"), record.getInt("expire_type")));
+        }
+        return ResultFactory.success(JSONObject.parse(JFinalJson.getJson().toJson(result)));
+    }
+
+    /**
+     * job完成提交
+     * @param param
+     * @return
+     */
+    @Before(Tx.class)
+    public Result finishJob(Job param, int userId) {
+        if (null == param.getId()) {
+            return ResultFactory.error(Constant.ResultCode.LEAK_PARAM);
+        }
+        List<Job> jobList = new ArrayList<>();
+        Job resourceJob = Job.dao.findById(param.getId());
+        Task task = queryById(resourceJob.getTaskId());
+
+        // 根据类型处理
+        if (task.getType() == Constant.TaskType.TOGETHER) {
+            jobList.addAll(Job.dao.find("select * from job where code = ?", resourceJob.getCode()));
+        } else {
+            jobList.add(Job.dao.findById(param.getId()));
+        }
+
+        for (Job job : jobList) {
+
+            // 修改job字段
+            job.setStatus(Constant.JOB_STATUS.FINISHED);
+            job.setUpdatedBy(userId);
+            job.setFinishTime(new Date());
+            job.setFinishAmount(param.getFinishAmount());
+            job.setDesc(param.getDesc());
+            job.update();
+
+            // 处理分数
+            userService.addScore(job.getUserId(), task.getScore(), param.getId());
+        }
+
+        return ResultFactory.success(null);
     }
 }
