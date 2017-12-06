@@ -13,6 +13,8 @@ public class Constant {
 
     public static final String MD5_FRE = "*_*ILovePotato*_*";
 
+    public static final String PROP_SEP_SIGN = "@@";
+
     public static class ResultCode {
         public static final int SUCCESS = 0;
         public static final int ERROR = -1;
@@ -31,6 +33,7 @@ public class Constant {
         public static final int ILLEGAL_CRON = 1013;
         public static final int DELETE_QUARTZ_JOB_ERROR = 1014;
         public static final int SCORE_NOT_ENOUGH = 1015;
+        public static final int MISS_JOB_GRAB = 1016;
     }
 
     static {
@@ -51,6 +54,7 @@ public class Constant {
         codeMap.put(ResultCode.ILLEGAL_CRON, "cron表达式非法");
         codeMap.put(ResultCode.DELETE_QUARTZ_JOB_ERROR, "删除quartz中job失败");
         codeMap.put(ResultCode.SCORE_NOT_ENOUGH, "剩余分值不足");
+        codeMap.put(ResultCode.MISS_JOB_GRAB, "任务已经被别人抢走，你手慢了");
     }
 
     /* 任务类型 1-个人 2-竞争 3- 共同 4轮流*/

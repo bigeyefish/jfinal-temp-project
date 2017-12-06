@@ -36,18 +36,21 @@ public class DateUtil {
      * @return 失效时间
      */
     public static Date getTaskExpireDate(Date createdDate, int expireType) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(createdDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
         switch (expireType) {
             case Constant.EXPIRE_TYPE.CUR_DAY:
-                return createdDate;
+                return DateUtils.addDays(calendar.getTime(), 1);
             case Constant.EXPIRE_TYPE.CUR_MONTH:
-                return DateUtils.ceiling(createdDate, Calendar.MONTH);
+                return DateUtils.ceiling(calendar.getTime(), Calendar.MONTH);
             case Constant.EXPIRE_TYPE.CUR_WEEK:
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(createdDate);
                 calendar.add(Calendar.DAY_OF_YEAR, 7 - calendar.get(Calendar.DAY_OF_WEEK + 1));
                 return calendar.getTime();
             case Constant.EXPIRE_TYPE.WEEK_DAYS:
-                return DateUtils.addDays(createdDate, 7);
+                return DateUtils.addDays(calendar.getTime(), 7);
             default:
                 return null;
         }

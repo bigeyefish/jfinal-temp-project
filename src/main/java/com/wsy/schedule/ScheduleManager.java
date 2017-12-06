@@ -1,5 +1,7 @@
 package com.wsy.schedule;
 
+import com.jfinal.kit.Prop;
+import com.jfinal.kit.PropKit;
 import com.wsy.model.Task;
 import com.wsy.service.TaskService;
 import com.wsy.util.Constant;
@@ -30,15 +32,40 @@ public class ScheduleManager {
             scheduler = new StdSchedulerFactory().getScheduler();
             scheduler.start();
 
+            // 启动业务调度任务
             List<Task> taskList = taskService.queryTaskByStatus(true);
             for (Task task : taskList) {
                 Date date = startTask(task);
                 task.setNextFireTime(date).update();
             }
+
+            // 启动系统调度任务
+            Prop prop = PropKit.use("cron.properties");
+            for (Object key : prop.getProperties().keySet()) {
+                String cron_job = prop.get(key.toString());
+                String[] arr = cron_job.split(Constant.PROP_SEP_SIGN);
+                if (arr.length < 2) {
+                    LogUtil.LogType.errorLog.error("the format of cron config [{}] is wrong !", cron_job);
+                    return false;
+                }
+
+                @SuppressWarnings("unchecked")
+                JobDetail jobDetail = JobBuilder.newJob((Class<? extends Job>) Class.forName(arr[1])).withIdentity(key.toString()).build();
+
+                TriggerBuilder<CronTrigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(key.toString()).
+                        withSchedule(CronScheduleBuilder.cronSchedule(arr[0]));
+                CronTrigger trigger = triggerBuilder.build();
+                scheduler.scheduleJob(jobDetail, trigger);
+            }
+
             return true;
         } catch (SchedulerException e) {
             e.printStackTrace();
-            LogUtil.LogType.errorLog.error("start task error: ", e.getMessage());
+            LogUtil.LogType.errorLog.error("start task error: {}", e.getMessage());
+            return false;
+        } catch (ClassNotFoundException e) {
+            LogUtil.LogType.errorLog.error("can not find class: {}", e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
@@ -68,7 +95,7 @@ public class ScheduleManager {
 
     /**
      * 更新task
-     * @param task
+     * @param task task
      */
     public static Date updateTask(Task task) throws SchedulerException {
 

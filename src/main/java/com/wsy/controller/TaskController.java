@@ -80,4 +80,13 @@ public class TaskController extends Controller{
     public void finishJob() {
         renderJson(taskService.finishJob(getBean(Job.class, ""), getSessionAttr("userId")));
     }
+
+    /**
+     * 抢任务
+     */
+    @Clear(GET.class)
+    @Before(POST.class)
+    public void grabJob() {
+        renderJson(taskService.grabJob(getParaToInt(0)));
+    }
 }

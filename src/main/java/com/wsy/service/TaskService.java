@@ -16,6 +16,7 @@ import com.wsy.util.Constant;
 import com.wsy.util.DateUtil;
 import com.wsy.util.LogUtil;
 import com.wsy.util.ResultFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.quartz.CronExpression;
 import org.quartz.SchedulerException;
 
@@ -31,8 +32,8 @@ import java.util.Map;
  */
 public class TaskService {
 
-    private static String EDITABLE_FIELD[] = { "name", "desc", "type", "score", "priority", "alarm_type", "amount",
-            "unit", "measure_type", "expire_type",  "end_time", "cron_expression", "start_time" };
+    private static String EDITABLE_FIELD[] = {"name", "desc", "type", "score", "priority", "alarm_type", "amount",
+            "unit", "measure_type", "expire_type", "end_time", "cron_expression", "start_time"};
 
     private UserService userService = new UserService();
 
@@ -93,6 +94,7 @@ public class TaskService {
 
     /**
      * 根据id查数据
+     *
      * @param taskId taskId
      * @return Task
      */
@@ -102,9 +104,10 @@ public class TaskService {
 
     /**
      * 保存task
-     * @param task 任务
+     *
+     * @param task         任务
      * @param executorList 执行人员id列表
-     * @param userId 当前用户
+     * @param userId       当前用户
      * @return Result
      */
     @Before(Tx.class)
@@ -144,7 +147,7 @@ public class TaskService {
 
                 // 需要替换schedule中task字段 end_time, cron_expression, startTime,
                 if (!task.getCronExpression().equals(oldTask.getCronExpression()) || task.getStartTime().getTime() != oldTask.getStartTime().getTime() ||
-                       !DateUtil.isEqual(task.getEndTime(), oldTask.getEndTime())) {
+                        !DateUtil.isEqual(task.getEndTime(), oldTask.getEndTime())) {
                     oldTask.setNextFireTime(ScheduleManager.updateTask(task));
                 }
 
@@ -173,6 +176,7 @@ public class TaskService {
 
     /**
      * 删除task (不进行物理删除)
+     *
      * @param taskId taskId
      * @return Result
      */
@@ -198,6 +202,7 @@ public class TaskService {
 
     /**
      * 根据taskId查询最后一次执行完成的job记录
+     *
      * @param taskId taskId
      * @return Job
      */
@@ -207,9 +212,10 @@ public class TaskService {
 
     /**
      * 查询人员对应的job列表
-     * @param userId 用户id
-     * @param page 页码
-     * @param size 数量
+     *
+     * @param userId     用户id
+     * @param page       页码
+     * @param size       数量
      * @param queryParam 查询参数
      * @return job列表
      */
@@ -236,6 +242,7 @@ public class TaskService {
 
     /**
      * job完成提交
+     *
      * @param param
      * @return
      */
@@ -270,5 +277,51 @@ public class TaskService {
         }
 
         return ResultFactory.success(null);
+    }
+
+    /**
+     * 抢任务
+     *
+     * @param jobId  jobId
+     * @return
+     */
+    @Before(Tx.class)
+    public Result grabJob(int jobId) {
+
+        synchronized (TaskService.class) {
+
+            // 先查出这个任务
+            Job job = Job.dao.findById(jobId);
+            if (null == job || job.getStatus() != Constant.JOB_STATUS.TO_BE_GRAB) {
+                return ResultFactory.createResult(Constant.ResultCode.MISS_JOB_GRAB);
+            }
+
+            // 抢到这个任务
+            job.setStatus(Constant.JOB_STATUS.RUNNING).update();
+            // 删除其他人的这个任务
+            Db.update("delete from job where code = ? and id != ? ", job.getCode(), job.getId());
+            return ResultFactory.success(null);
+        }
+    }
+
+    /**
+     * 设置job过期
+     */
+    public void setJobsExpire() {
+        List<Record> records = Db.find("select t.id, t.created_time, t1.expire_type from job t left join task t1 on t.task_id = t1.id where t.status in ("
+                + Constant.JOB_STATUS.RUNNING + "," + Constant.JOB_STATUS.TO_BE_GRAB + ")");
+        long now = new Date().getTime();
+        List<Integer> expireIdList = new ArrayList<>();
+        for (Record record : records) {
+            Date expireDate = DateUtil.getTaskExpireDate(record.getDate("created_time"), record.getInt("expire_type"));
+            if (expireDate.getTime() <= now) {
+                expireIdList.add(record.get("id"));
+            }
+        }
+        if (expireIdList.size() > 0) {
+            Db.update("update job set status = ? where id in (" + StringUtils.join(expireIdList.toArray(), ",") + ")", Constant.JOB_STATUS.EXPIRED);
+        }
+
+        LogUtil.LogType.taskLog.info("{} jobs was expired", expireIdList.size());
     }
 }

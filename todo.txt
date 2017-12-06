@@ -8,7 +8,7 @@
 8、增加字段，总分数（完成）
 9、job增加字段 amount/finishTime/updated_by/（完成）
 10、生成job逻辑修改，type（完成）
+11、job页面（完成）
 
-11、定期打印 jobs 和 triggers
-12、job页面
+12、定期打印 jobs 和 triggers
 13、定时任务，修改job状态
