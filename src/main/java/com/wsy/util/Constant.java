@@ -45,7 +45,7 @@ public class Constant {
         codeMap.put(ResultCode.PASSWD_INCORRECT, "密码错误");
         codeMap.put(ResultCode.PASSWD_LENGTH_ERR, "密码长度在6-16之间");
         codeMap.put(ResultCode.MD5_ERR, "MD5加密异常");
-        codeMap.put(ResultCode.FIRST_LOGIN, "首次登陆");
+        codeMap.put(ResultCode.FIRST_LOGIN, "未登陆");
         codeMap.put(ResultCode.ILLEGAL_TOKEN, "非法token");
         codeMap.put(ResultCode.TOKEN_TIMEOUT, "token 过期");
         codeMap.put(ResultCode.USER_DONOT_EXIST, "用户不存在");

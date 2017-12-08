@@ -15,6 +15,31 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <running.evn>dev</running.evn>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <running.env>test</running.env>
+            </properties>
+        </profile>
+        <profile>
+            <id>prd</id>
+            <properties>
+                <running.env>prd</running.env>
+            </properties>
+            <activation>
+                <!-- 默认环境 -->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
     <!-- 使用阿里 maven 库 -->
     <repositories>
         <repository>
@@ -130,7 +155,9 @@
                     <!--<archiveClasses>true</archiveClasses>-->
                     <webResources>
                         <resource>
-                            <directory>src/main/webapp</directory>
+                            <directory>src/main/resources/${running.env}</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <filtering>true</filtering>
                         </resource>
                     </webResources>
                 </configuration>

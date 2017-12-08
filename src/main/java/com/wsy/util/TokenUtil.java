@@ -61,7 +61,6 @@ public class TokenUtil {
         if (arr == null || arr.length == 0) {
             return ResultFactory.createResult(Constant.ResultCode.ILLEGAL_TOKEN);
         }
-        log.info("request from user: " + arr[0]);
         User user = UserService.getUserBasicSecurity(Integer.parseInt(arr[0]));
         if (user == null) {
             return ResultFactory.createResult(Constant.ResultCode.USER_DONOT_EXIST);
