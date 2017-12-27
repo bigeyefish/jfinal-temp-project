@@ -47,8 +47,12 @@ public class DateUtil {
             case Constant.EXPIRE_TYPE.CUR_MONTH:
                 return DateUtils.ceiling(calendar.getTime(), Calendar.MONTH);
             case Constant.EXPIRE_TYPE.CUR_WEEK:
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                calendar.add(Calendar.DATE, 7);
+                if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                    calendar.add(Calendar.DATE, 1);
+                } else {
+                    calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                    calendar.add(Calendar.DATE, 7);
+                }
                 return calendar.getTime();
             case Constant.EXPIRE_TYPE.WEEK_DAYS:
                 return DateUtils.addDays(calendar.getTime(), 7);

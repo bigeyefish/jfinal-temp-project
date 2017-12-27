@@ -11,9 +11,10 @@ import com.wsy.util.TokenUtil;
 import javax.servlet.http.HttpSession;
 
 /**
+ * 微信请求权限校验
  * Created by Lenovo on 2017/10/13.
  */
-public class AuthInterceptor implements Interceptor {
+public class WechartAuthInterceptor implements Interceptor {
 
     private UserService userService = new UserService();
 

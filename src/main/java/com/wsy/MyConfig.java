@@ -1,6 +1,5 @@
 package com.wsy;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.config.*;
 import com.jfinal.ext.interceptor.GET;
 import com.jfinal.json.FastJsonFactory;
@@ -12,10 +11,10 @@ import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.template.Engine;
-import com.wsy.interceptor.AuthInterceptor;
+import com.wsy.interceptor.WebAuthInterceptor;
 import com.wsy.model._MappingKit;
-import com.wsy.routes.AdminRoutes;
-import com.wsy.routes.FrontRoutes;
+import com.wsy.routes.WebApiRoutes;
+import com.wsy.routes.WechartRoutes;
 import com.wsy.schedule.ScheduleManager;
 
 /**
@@ -34,8 +33,8 @@ public class MyConfig extends JFinalConfig {
 
     public void configRoute(Routes me) {
         me.setBaseViewPath("/view");
-        me.add(new FrontRoutes());  // 前端路由
-        me.add(new AdminRoutes());  // 后端路由
+        me.add(new WechartRoutes());  // 前端路由
+        me.add(new WebApiRoutes());  // 后端路由
     }
 
     public void configEngine(Engine me) {
@@ -59,7 +58,7 @@ public class MyConfig extends JFinalConfig {
     }
 
     public void configInterceptor(Interceptors me) {
-        me.addGlobalActionInterceptor(new AuthInterceptor());
+        me.addGlobalActionInterceptor(new WebAuthInterceptor());
         me.add(new GET());
     }
 

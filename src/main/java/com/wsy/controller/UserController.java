@@ -8,9 +8,8 @@ import com.jfinal.ext.interceptor.POST;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
-import com.wsy.interceptor.AuthInterceptor;
+import com.wsy.interceptor.WebAuthInterceptor;
 import com.wsy.model.biz.Result;
-import com.wsy.service.FamilyService;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 import com.wsy.util.ResultFactory;
@@ -27,7 +26,7 @@ public class UserController extends Controller{
     /**
      * 登录
      */
-    @Clear({GET.class, AuthInterceptor.class})
+    @Clear({GET.class, WebAuthInterceptor.class})
     @Before(POST.class)
     public void login() {
         Result result = ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM);
