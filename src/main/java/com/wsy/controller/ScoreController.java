@@ -1,6 +1,8 @@
 package com.wsy.controller;
 
 import com.jfinal.core.Controller;
+import com.jfinal.kit.Kv;
+import com.wsy.model.User;
 import com.wsy.service.UserService;
 
 /**
@@ -15,6 +17,7 @@ public class ScoreController extends Controller {
      * 查询分数记录
      */
     public void queryScoreFlow() {
-        renderJson(userService.queryScoreRecord(getParaMap(), getParaToInt(0), getParaToInt(1)));
+        Kv kv = getSessionAttr("userInfo");
+        renderJson(userService.queryScoreRecord(((User)kv.get("user")).getFamilyId(), getParaMap(), getParaToInt(0), getParaToInt(1)));
     }
 }

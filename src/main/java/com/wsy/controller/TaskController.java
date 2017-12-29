@@ -34,6 +34,14 @@ public class TaskController extends Controller{
     }
 
     /**
+     * 查询家庭task (k, v)
+     */
+    public void queryFamilyTaskForMap() {
+        Kv kv = getSessionAttr("userInfo");
+        renderJson(taskService.queryFamilyTaskForMap(((User)kv.get("user")).getFamilyId()));
+    }
+
+    /**
      * 查询当前登录人job列表
      */
     public void queryMyJob() {

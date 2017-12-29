@@ -72,10 +72,21 @@ public class TaskService {
      *
      * @return result
      */
-    public Result queryFamilyTask(int familyid, int page, int size) {
+    public Result queryFamilyTask(int familyId, int page, int size) {
         return ResultFactory.success(Task.dao.paginate(page, size, "select *",
                 "from task where is_active = 1 and id in (select task_id from task_user where user_id in " +
-                        "(select id from user where family_id = ?))", familyid));
+                        "(select id from user where family_id = ?))", familyId));
+    }
+
+    /**
+     * 查询家庭task (k, v)
+     * @param familyId
+     * @return
+     */
+    public Result queryFamilyTaskForMap(int familyId) {
+        List<Record> result = Db.find("select id, name from task where is_active = 1 and id in " +
+                "(select task_id from task_user where user_id in (select id from user where family_id = ?))", familyId);
+        return ResultFactory.success(JSONObject.parse(JFinalJson.getJson().toJson(result)));
     }
 
     /**

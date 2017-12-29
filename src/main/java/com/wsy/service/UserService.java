@@ -1,5 +1,7 @@
 package com.wsy.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jfinal.json.JFinalJson;
 import com.jfinal.kit.Kv;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -162,10 +164,11 @@ public class UserService {
      * @param size 数量
      * @return Result
      */
-    public Result queryScoreRecord(Map<String, String[]> queryParam, int page, int size) {
+    public Result queryScoreRecord(int familyId, Map<String, String[]> queryParam, int page, int size) {
         StringBuilder sql = new StringBuilder("from score_flow t left join job t1 on t.job_id = t1.id left join task t2" +
-                " on t1.task_id = t2.id where 1 = 1");
+                " on t1.task_id = t2.id left join user t3 on t.user_id = t3.id where t3.family_id = ?");
         List<Object> param = new ArrayList<>();
+        param.add(familyId);
         if (queryParam.get("taskId") != null) {
             sql.append(" and t2.id = ?");
             param.add(queryParam.get("taskId")[0]);
@@ -175,12 +178,12 @@ public class UserService {
             param.add(queryParam.get("userId")[0]);
         }
         if (queryParam.get("date") != null) {
-            sql.append(" and t.DATE(`created_time`) = str_to_date(?, '%Y-%m-%d')");
+            sql.append(" and DATE(t.created_time) = str_to_date(?, '%Y-%m-%d')");
             param.add(queryParam.get("date")[0]);
         }
         sql.append(" order by t.created_time desc");
-        Page<Record> result = Db.paginate(page, size, "select t.*, t2.name", sql.toString(), param.toArray());
+        Page<Record> result = Db.paginate(page, size, "select t.*, t2.name, t3.nick_name", sql.toString(), param.toArray());
 
-        return ResultFactory.success(result);
+        return ResultFactory.success(JSONObject.parse(JFinalJson.getJson().toJson(result)));
     }
 }
