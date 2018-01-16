@@ -39,6 +39,14 @@ public class FalconsUtil {
         map.put("time", DateKit.toStr(new Date()));
         map.put("token", PropKit.get("falcons.token"));
         map.put("image", imgBase64);
+
+        /* 新增字段 */
+        map.put("court", interviewer.getCourt());
+        map.put("buildingUnit", interviewer.getBuildingUnit());
+        map.put("room", interviewer.getRoom());
+        map.put("latitude", interviewer.getLatitude());
+        map.put("longitude", interviewer.getLongitude());
+
         try {
             String result = HttpUtil.postJson(PropKit.get("falcons.url"), map);
             log.info("result:" + result);

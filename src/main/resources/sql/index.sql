@@ -1,3 +1,3 @@
-#sql("findUserByName")
-  select * from user t where t.user_name = #para(0)
+#sql("findUserByTel")
+  select * from user t where t.tel = #para(0)
 #end

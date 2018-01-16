@@ -90,4 +90,49 @@ public abstract class BaseInterviewer<M extends BaseInterviewer<M>> extends Mode
 		return getStr("portrait");
 	}
 
+	public M setCourt(java.lang.String court) {
+		set("court", court);
+		return (M)this;
+	}
+
+	public java.lang.String getCourt() {
+		return getStr("court");
+	}
+
+	public M setBuildingUnit(java.lang.String buildingUnit) {
+		set("building_unit", buildingUnit);
+		return (M)this;
+	}
+
+	public java.lang.String getBuildingUnit() {
+		return getStr("building_unit");
+	}
+
+	public M setRoom(java.lang.String room) {
+		set("room", room);
+		return (M)this;
+	}
+
+	public java.lang.String getRoom() {
+		return getStr("room");
+	}
+
+	public M setLatitude(java.lang.String latitude) {
+		set("latitude", latitude);
+		return (M)this;
+	}
+
+	public java.lang.String getLatitude() {
+		return getStr("latitude");
+	}
+
+	public M setLongitude(java.lang.String longitude) {
+		set("longitude", longitude);
+		return (M)this;
+	}
+
+	public java.lang.String getLongitude() {
+		return getStr("longitude");
+	}
+
 }

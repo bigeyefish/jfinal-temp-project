@@ -9,6 +9,7 @@ import com.jfinal.kit.Kv;
 import com.jfinal.kit.PropKit;
 import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.model.User;
+import com.wsy.service.DistrictService;
 import com.wsy.service.UserService;
 import com.wsy.util.Constant;
 import com.wsy.util.ResultFactory;
@@ -25,6 +26,7 @@ import java.util.Properties;
 public class UserController extends Controller{
 
     private UserService userService = new UserService();
+    private DistrictService districtService = new DistrictService();
     public static final Logger log = LogManager.getLogger(UserController.class);
 
     /**
@@ -33,7 +35,7 @@ public class UserController extends Controller{
     @Clear({AuthInterceptor.class, GET.class})
     @Before(POST.class)
     public void login() {
-        User user = userService.getUserByName(getPara("userName"));
+        User user = userService.getUserByTel(getPara("tel"));
 
         if (null != user && user.get("password").equals(getPara("password"))) {
             log.warn("用户[{}]登录成功", user.getUserName());
@@ -42,13 +44,14 @@ public class UserController extends Controller{
 
             // 系统配置
             Properties properties = PropKit.use("open.properties").getProperties();
-            Kv kv = Kv.by("userName", user.getUserName()).set("nickName", user.getNickName()).set("id", user.getId())
+            Kv kv = Kv.by("userName", user.getUserName()).set("id", user.getId())
                     .set("idNum", user.getIdNum()).set("tel", user.getTel()).set("sysConf", properties);
+            kv.set("district", districtService.queryById(user.getDistrictId()));
 
             renderJson(ResultFactory.success(kv));
             return;
         }
-        log.warn("用户[{}]登录失败", getPara("userName"));
+        log.warn("用户[{}]登录失败", getPara("tel"));
         removeSessionAttr("user");
         renderJson(ResultFactory.createResult(Constant.ResultCode.LOGIN_FAIL, null));
     }
@@ -56,12 +59,21 @@ public class UserController extends Controller{
     /**
      * 修改密码
      */
+    @Clear({AuthInterceptor.class, GET.class})
+    @Before(POST.class)
+    public void resetPassword() {
+        String tel = getPara("tel");
+        String newPass = getPara("newPass");
+        String verifyCode = getPara("verifyCode");
+        renderJson(userService.resetPassword(tel, newPass, verifyCode));
+    }
+
+    /**
+     * 用户注册
+     */
     @Clear(GET.class)
     @Before(POST.class)
-    public void modifyPassword() {
-        String oldPass = getPara("oldPass");
-        String newPass = getPara("newPass");
-        Integer userId = ((User) getSessionAttr("user")).getId();
-        renderJson(userService.modifyPassword(userId, oldPass, newPass));
+    public void regist() {
+        renderJson(userService.addUser(getBean(User.class), getPara("verifyCode")));
     }
 }

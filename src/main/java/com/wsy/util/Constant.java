@@ -20,6 +20,8 @@ public class Constant {
         public static final int NOT_LOGIN = 1004;
         public static final int PASSWORD_ERR = 1005;
         public static final int PASSWORD_CHECK_ERR = 1006;
+        public static final int TEL_EXIST = 1007;
+        public static final int TEL_NOT_EXIST = 1008;
     }
 
     static {
@@ -31,5 +33,7 @@ public class Constant {
         codeMap.put(ResultCode.NOT_LOGIN, "用户未登录");
         codeMap.put(ResultCode.PASSWORD_ERR, "用户密码错误");
         codeMap.put(ResultCode.PASSWORD_CHECK_ERR, "密码在6-16个字符之间");
+        codeMap.put(ResultCode.TEL_EXIST, "系统存在相同电话号码");
+        codeMap.put(ResultCode.TEL_NOT_EXIST, "手机号码不存在");
     }
 }

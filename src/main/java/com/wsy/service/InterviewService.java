@@ -87,7 +87,7 @@ public class InterviewService {
     }
 
     /**
-     * NFC手机登记访客
+     * 手动登记访客
      * @param interviewer
      * @param userId
      * @return
