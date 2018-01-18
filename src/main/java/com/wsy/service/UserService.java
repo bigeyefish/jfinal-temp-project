@@ -7,6 +7,7 @@ import com.wsy.model.biz.Result;
 import com.wsy.util.Constant;
 import com.wsy.util.LogUtil;
 import com.wsy.util.ResultFactory;
+import com.wsy.util.SmsUtil;
 
 /**
  * Created by Lenovo on 2017/10/15.
@@ -42,7 +43,10 @@ public class UserService {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
 
-        // todo 校验短信验证码
+        // 验证短信验证码
+        if (!SmsUtil.verifySms(user.getTel(), verifyCode)) {
+            return ResultFactory.createResult(Constant.ResultCode.VERIFY_CODE_ERR, null);
+        }
 
         // 检查重复电话号码
         User user1 = getUserByTel(user.getTel());
@@ -72,7 +76,10 @@ public class UserService {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
         try {
-            // todo 校验短信验证码
+            // 验证短信验证码
+            if (!SmsUtil.verifySms(tel, verifyCode)) {
+                return ResultFactory.createResult(Constant.ResultCode.VERIFY_CODE_ERR, null);
+            }
 
             User user = User.dao.findFirst("select * from user t where t.tel = ? ", tel);
             if (null == user) {

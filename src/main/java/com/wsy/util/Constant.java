@@ -22,6 +22,7 @@ public class Constant {
         public static final int PASSWORD_CHECK_ERR = 1006;
         public static final int TEL_EXIST = 1007;
         public static final int TEL_NOT_EXIST = 1008;
+        public static final int VERIFY_CODE_ERR = 1009;
     }
 
     static {
@@ -35,5 +36,6 @@ public class Constant {
         codeMap.put(ResultCode.PASSWORD_CHECK_ERR, "密码在6-16个字符之间");
         codeMap.put(ResultCode.TEL_EXIST, "系统存在相同电话号码");
         codeMap.put(ResultCode.TEL_NOT_EXIST, "手机号码不存在");
+        codeMap.put(ResultCode.VERIFY_CODE_ERR, "短信验证码错误");
     }
 }

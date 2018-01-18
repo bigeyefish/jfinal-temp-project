@@ -4,6 +4,7 @@ import com.jfinal.config.Routes;
 import com.wsy.controller.DistrictController;
 import com.wsy.controller.IndexController;
 import com.wsy.controller.InterviewController;
+import com.wsy.controller.SmsController;
 
 /**
  * 前端路由
@@ -14,5 +15,6 @@ public class FrontRoutes extends Routes {
         add("/", IndexController.class);
         add("/api/interview", InterviewController.class);
         add("/api/district", DistrictController.class);
+        add("/api/sms", SmsController.class);
     }
 }
