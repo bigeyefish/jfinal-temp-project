@@ -17,6 +17,6 @@ public class SmsController extends Controller {
     @Clear({AuthInterceptor.class, GET.class})
     @Before(POST.class)
     public void sendSms() {
-        renderJson(SmsUtil.sendSms(getPara("tel"), getPara("code")));
+        renderJson(SmsUtil.sendSms(getPara("tel")));
     }
 }

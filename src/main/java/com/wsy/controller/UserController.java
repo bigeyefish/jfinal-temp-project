@@ -71,7 +71,7 @@ public class UserController extends Controller{
     /**
      * 用户注册
      */
-    @Clear(GET.class)
+    @Clear({AuthInterceptor.class, GET.class})
     @Before(POST.class)
     public void regist() {
         renderJson(userService.addUser(getBean(User.class), getPara("verifyCode")));

@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.jfinal.ext.kit.DateKit;
 import com.jfinal.kit.PropKit;
 import com.wsy.model.biz.Result;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,19 +16,23 @@ import java.util.Map;
  * Created by sanyihwang on 2018/1/18.
  */
 public class SmsUtil {
+    private static Logger logger = LogManager.getLogger(SmsUtil.class);
 
     /* 存储未交验过的短信验证码，供校验使用 */
     private static Map<String, String> smsCodeMap = new HashMap<>();
 
     /**
      * 发送验证码
+     *
      * @param tel 手机号码
-     * @param code 数据验证码
      * @return result
      */
-    public static Result sendSms(String tel, String code) {
+    public static Result sendSms(String tel) {
         JSONObject json = new JSONObject();
         JSONObject smsJson = new JSONObject();
+
+        // 生成随机数字
+        String code = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         smsJson.put("code", code);
         try {
             String uid = PropKit.get("sms.uid");
@@ -39,9 +45,14 @@ public class SmsUtil {
             json.put("mobile", tel);
             json.put("ckey", ckey);
             String result = HttpUtil.postJson(PropKit.get("sms.server"), json);
-            System.out.println(json.toJSONString());
-            System.out.println(result);
-            return ResultFactory.success(result);
+            // {"resCode":"0000","resMsg":"调用成功"}
+            JSONObject retObj = (JSONObject) JSONObject.parse(result);
+            logger.info("sms: param: [{}], result: [{}]", json.toJSONString(), result);
+            if (retObj.getInteger("resCode") == 0) {
+                smsCodeMap.put(tel, code);
+                return ResultFactory.success(null);
+            }
+            return ResultFactory.error(retObj.get("resMsg"));
         } catch (Exception e) {
             e.printStackTrace();
             return ResultFactory.error(e.getMessage());
@@ -50,7 +61,8 @@ public class SmsUtil {
 
     /**
      * 验证短信验证码
-     * @param tel 手机号
+     *
+     * @param tel     手机号
      * @param smsCode 短信验证码
      * @return
      */
@@ -61,10 +73,5 @@ public class SmsUtil {
         } else {
             return false;
         }
-    }
-
-    public static void main(String[] args) {
-        PropKit.use("config.properties");
-        SmsUtil.sendSms("13971256024", "123456");
     }
 }
