@@ -1,6 +1,8 @@
 package com.wsy.controller;
 
+import com.jfinal.aop.Clear;
 import com.jfinal.core.Controller;
+import com.wsy.interceptor.AuthInterceptor;
 import com.wsy.service.DistrictService;
 
 /**
@@ -13,6 +15,7 @@ public class DistrictController extends Controller {
     /**
      * 查询小区数据
      */
+    @Clear({AuthInterceptor.class})
     public void queryDistrict() {
         renderJson(service.queryAllDistrict());
     }
