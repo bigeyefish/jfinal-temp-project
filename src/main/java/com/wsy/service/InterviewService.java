@@ -8,8 +8,11 @@ import com.jfinal.kit.StrKit;
 import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 import com.wsy.util.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -18,6 +21,8 @@ import java.util.UUID;
  * Created by sanyihwang on 2017/11/6.
  */
 public class InterviewService {
+
+    public static final Logger log = LogManager.getLogger(InterviewService.class);
 
     /**
      * 电子卡包登记访客
@@ -28,13 +33,17 @@ public class InterviewService {
         if (null == jsonStr) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
+        Interviewer interviewer = new Interviewer();
         try {
+            // 保留编码的idCode
+            JSONObject json = (JSONObject)JSONObject.parse(jsonStr);
+            interviewer.setIdNumCode(json.getString("idNum"));
+
             // 解析电子卡包数据
             JSONObject jsonObj = CardUtil.decodeCardInfo(jsonStr);
             if (null == jsonObj) {
                 return ResultFactory.createResult(Constant.ResultCode.DECODE_CARD_ERR, null);
             }
-            Interviewer interviewer = new Interviewer();
             interviewer.setName((String)jsonObj.get("name"));
             interviewer.setTel((String)jsonObj.get("tel"));
             interviewer.setIdNum((String)jsonObj.get("idNum"));
@@ -42,6 +51,32 @@ public class InterviewService {
             interviewer.setCreateBy(userId);
             // 存储数据库
             interviewer.save();
+
+            // idNumCode推送
+            new Thread(() -> {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("codeId", json.getString("idNum"));
+                jsonObject.put("Build", "5栋一单元");
+                jsonObject.put("Community", "5栋一单元");
+                jsonObject.put("Name", interviewer.getName());
+                jsonObject.put("Phone", interviewer.getTel());
+                jsonObject.put("PersonID", interviewer.getIdNum());
+
+                try {
+                    String result = HttpUtil.postJson(PropKit.get("card.idNumCode.push.server"), jsonObject);
+                    JSONObject retJson = JSONObject.parseObject(result);
+                    if (retJson.getInteger("code") == Constant.ResultCode.SUCCESS) {
+                        log.info("report series idNum success. {}", result);
+                    } else {
+                        LogUtil.LogType.errorLog.error("report series idNum failed: {}", result);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    LogUtil.LogType.errorLog.error("report series idNum error: {}", e.getMessage());
+                }
+
+            }).start();
+
             return ResultFactory.success(jsonObj);
         } catch (Exception e) {
             e.printStackTrace();

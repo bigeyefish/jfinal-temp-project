@@ -135,4 +135,13 @@ public abstract class BaseInterviewer<M extends BaseInterviewer<M>> extends Mode
 		return getStr("longitude");
 	}
 
+	public M setIdNumCode(java.lang.String idNumCode) {
+		set("id_num_code", idNumCode);
+		return (M)this;
+	}
+
+	public java.lang.String getIdNumCode() {
+		return getStr("id_num_code");
+	}
+
 }
