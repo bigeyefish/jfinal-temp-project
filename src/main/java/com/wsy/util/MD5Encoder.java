@@ -4,10 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class MD5Encoder {
-	 public static String encode(String pwd) {  
-	        try {
-				System.out.println(pwd);
-				MessageDigest  digest = MessageDigest.getInstance("MD5");
+	 public static String encode(String pwd) {
+		 try {
+	            MessageDigest  digest = MessageDigest.getInstance("MD5");  
 	            byte[]  bytes = digest.digest(pwd.getBytes());  
 	            StringBuffer sb = new  StringBuffer();  
 	            for(int i = 0;i<bytes.length;i++){  
