@@ -1,6 +1,7 @@
 package com.wsy.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.kit.StrKit;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -16,10 +17,12 @@ import java.io.IOException;
  */
 public class HttpUtil {
 
-    public static String postJson(String url, JSONObject jsonObj) throws IOException {
+    public static String postJson(String url, JSONObject jsonObj, String contentType) throws IOException {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
-        post.addHeader("content-type", "application/json");
+        if (StrKit.notBlank(contentType)) {
+            post.setHeader("Content-Type", contentType);
+        }
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5 * 60 * 1000).setConnectTimeout(5 * 60 * 1000).build();//设置请求和传输超时时间
         post.setConfig(requestConfig);
         post.setEntity(new StringEntity(jsonObj.toString(), "UTF-8"));
@@ -30,7 +33,7 @@ public class HttpUtil {
             if (code == 200) {
                 result = EntityUtils.toString(response.getEntity(), "UTF-8");
             } else {
-                LogUtil.LogType.errorLog.error("http request faild: [" + url + "][" + code + "]");
+                LogUtil.LogType.errorLog.error("http request faild: [" + url + "][" + code + "][" + jsonObj.toJSONString() + "]");
             }
         }
         return result;

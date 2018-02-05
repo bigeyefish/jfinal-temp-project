@@ -44,7 +44,7 @@ public class SmsUtil {
             json.put("modelId", PropKit.get("sms.modelId"));
             json.put("mobile", tel);
             json.put("ckey", ckey);
-            String result = HttpUtil.postJson(PropKit.get("sms.server"), json);
+            String result = HttpUtil.postJson(PropKit.get("sms.server"), json, "application/json");
             // {"resCode":"0000","resMsg":"调用成功"}
             JSONObject retObj = (JSONObject) JSONObject.parse(result);
             logger.info("sms: param: [{}], result: [{}]", json.toJSONString(), result);

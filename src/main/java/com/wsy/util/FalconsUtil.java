@@ -48,7 +48,7 @@ public class FalconsUtil {
         map.put("longitude", interviewer.getLongitude());
 
         try {
-            String result = HttpUtil.postJson(PropKit.get("falcons.url"), map);
+            String result = HttpUtil.postJson(PropKit.get("falcons.url"), map, "application/json");
             log.info("result:" + result);
             JSONObject jsonObject = (JSONObject) JSON.parse(result);
             if (null != jsonObject.get("code")) {

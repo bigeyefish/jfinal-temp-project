@@ -29,14 +29,14 @@ public class PublicSecurityDataReporter implements Runnable, IDataReporter {
     public void report() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("CardID", StrKit.isBlank(interviewer.getIdNumCode()) ? "102abad676fc42e1" : interviewer.getIdNumCode());
-        jsonObject.put("Build", StrKit.isBlank(interviewer.getBuildingUnit()) ? "5栋一单元" : interviewer.getBuildingUnit());
-        jsonObject.put("Community", StrKit.isBlank(interviewer.getRoom()) ? "5栋一单元" : interviewer.getRoom());
+        jsonObject.put("Build", StrKit.isBlank(interviewer.getBuildingUnit()) ? "05栋1单元" : interviewer.getBuildingUnit());
+        jsonObject.put("Community", StrKit.isBlank(interviewer.getRoom()) ? "光谷理想城" : interviewer.getRoom());
         jsonObject.put("Name", interviewer.getName());
         jsonObject.put("Phone", interviewer.getTel());
         jsonObject.put("PersonID", interviewer.getIdNum());
 
         try {
-            String result = HttpUtil.postJson(PropKit.get("card.idNumCode.push.server"), jsonObject);
+            String result = HttpUtil.postJson(PropKit.get("card.idNumCode.push.server"), jsonObject, "application/json");
             JSONObject retJson = JSONObject.parseObject(result);
             if (retJson.getInteger("code") == Constant.ResultCode.SUCCESS) {
                 log.info("report data {} to public security success. {}", jsonObject.toJSONString(), result);
