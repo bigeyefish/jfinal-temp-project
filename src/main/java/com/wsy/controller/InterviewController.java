@@ -28,7 +28,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInCard() {
-        renderJson(interviewService.checkInCard(getPara("data"), ((User)getSessionAttr("user")).getId()));
+        renderJson(interviewService.checkInCard(getPara("data"), getParaToInt("userId")));
     }
 
     /**
@@ -37,7 +37,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInNFC() {
-        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64"), getPara("cardId"), ((User)getSessionAttr("user")).getId()));
+        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64"), getPara("cardId"), getParaToInt("userId")));
     }
 
     /**
@@ -46,13 +46,13 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInManual() {
-        renderJson(interviewService.checkInManual(getBean(Interviewer.class), ((User)getSessionAttr("user")).getId()));
+        renderJson(interviewService.checkInManual(getBean(Interviewer.class), getParaToInt("userId")));
     }
 
     /**
      * 查询访客记录
      */
     public void queryInterviewerById() {
-        renderJson(interviewService.queryInterviewerById(((User)getSessionAttr("user")).getDistrictId(), getParaToInt("page", 1), getParaToInt("size", 10)));
+        renderJson(interviewService.queryInterviewerById(User.dao.findById(getParaToInt("userId")).getDistrictId(), getParaToInt("page", 1), getParaToInt("size", 10)));
     }
 }
