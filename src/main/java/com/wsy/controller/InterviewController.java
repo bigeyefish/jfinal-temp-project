@@ -37,7 +37,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInNFC() {
-        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64"), ((User)getSessionAttr("user")).getId()));
+        renderJson(interviewService.checkInNFC(getBean(Interviewer.class), getPara("imgBase64"), getPara("cardId"), ((User)getSessionAttr("user")).getId()));
     }
 
     /**

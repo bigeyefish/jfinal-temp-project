@@ -20,12 +20,14 @@ public class HttpUtil {
     public static String postJson(String url, JSONObject jsonObj, String contentType) throws IOException {
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
-        if (StrKit.notBlank(contentType)) {
-            post.setHeader("Content-Type", contentType);
-        }
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(5 * 60 * 1000).setConnectTimeout(5 * 60 * 1000).build();//设置请求和传输超时时间
         post.setConfig(requestConfig);
-        post.setEntity(new StringEntity(jsonObj.toString(), "UTF-8"));
+        StringEntity entity = new StringEntity(jsonObj.toString(), "UTF-8");
+        if (StrKit.notBlank(contentType)) {
+            post.setHeader("Content-Type", contentType);
+            entity.setContentType(contentType);
+        }
+        post.setEntity(entity);
         HttpResponse response = httpClient.execute(post);
         String result = null;
         if (response != null) {

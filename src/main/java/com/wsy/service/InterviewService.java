@@ -62,12 +62,14 @@ public class InterviewService {
      * NFC手机登记访客
      * @param interviewer
      * @param imgBase64
+     * @param cardId
      * @return
      */
-    public Result checkInNFC(Interviewer interviewer, String imgBase64, int userId) {
+    public Result checkInNFC(Interviewer interviewer, String imgBase64, String cardId, int userId) {
         if (null == interviewer || null == imgBase64) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
+        interviewer.setIdNumCode(cardId);
         interviewer.setCreateTime(new Date());
         interviewer.setCreateBy(userId);
         try {
