@@ -31,9 +31,9 @@ public class PublicSecurityDataReporter implements Runnable, IDataReporter {
         jsonObject.put("CardID", StrKit.isBlank(interviewer.getIdNumCode()) ? "102abad676fc42e1" : interviewer.getIdNumCode());
         jsonObject.put("Build", StrKit.isBlank(interviewer.getBuildingUnit()) ? "05栋1单元" : interviewer.getBuildingUnit());
         jsonObject.put("Community", StrKit.isBlank(interviewer.getRoom()) ? "光谷理想城" : interviewer.getRoom());
-        jsonObject.put("Name", interviewer.getName());
-        jsonObject.put("Phone", interviewer.getTel());
-        jsonObject.put("PersonID", interviewer.getIdNum());
+        jsonObject.put("Name", StrKit.isBlank(interviewer.getName()) ? "" : interviewer.getName());
+        jsonObject.put("Phone", StrKit.isBlank(interviewer.getTel()) ? "" : interviewer.getTel());
+        jsonObject.put("PersonID", StrKit.isBlank(interviewer.getIdNum()) ? "" : interviewer.getIdNum());
 
         try {
             String result = HttpUtil.postJson(PropKit.get("card.idNumCode.push.server"), jsonObject, "application/json");
