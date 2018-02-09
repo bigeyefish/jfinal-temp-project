@@ -1,6 +1,6 @@
 package com.wsy.util;
 
-import com.wsy.model.biz.Result;
+import com.wsy.model.Result;
 
 /**
  * Created by Lenovo on 2017/10/15.

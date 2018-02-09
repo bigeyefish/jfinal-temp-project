@@ -1,4 +1,4 @@
-package com.wsy.model.biz;
+package com.wsy.model;
 
 /**
  * api返回结果
@@ -31,14 +31,5 @@ public class Result {
 
     public Object getData() {
         return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "Result{code=" + code + ", msg='" + msg + '\'' + ", data=" + data + '}';
     }
 }

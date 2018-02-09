@@ -3,7 +3,7 @@ package com.wsy.util;
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.ext.kit.DateKit;
 import com.jfinal.kit.PropKit;
-import com.wsy.model.biz.Result;
+import com.wsy.model.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
