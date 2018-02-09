@@ -30,37 +30,6 @@ public class InterviewService {
      * @return
      */
     public Result checkInCard(Interviewer interviewer, String cardId, int userId) {
-        /*
-        if (null == jsonStr) {
-            return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
-        }
-        Interviewer interviewer = new Interviewer();
-        try {
-            // 保留编码的codeId
-            JSONObject json = (JSONObject)JSONObject.parse(jsonStr);
-            interviewer.setIdNumCode(json.getString("codeId"));
-
-            // 解析电子卡包数据
-            JSONObject jsonObj = CardUtil.decodeCardInfo(jsonStr);
-            if (null == jsonObj) {
-                return ResultFactory.createResult(Constant.ResultCode.DECODE_CARD_ERR, null);
-            }
-            interviewer.setName((String)jsonObj.get("name"));
-            interviewer.setTel((String)jsonObj.get("tel"));
-            interviewer.setIdNum((String)jsonObj.get("idNum"));
-            interviewer.setCreateTime(new Date());
-            interviewer.setCreateBy(userId);
-            // 存储数据库
-            interviewer.save();
-
-            // idNumCode推送
-            new Thread(new PublicSecurityDataReporter(interviewer)).start();
-
-            return ResultFactory.success(jsonObj);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultFactory.error(e.getMessage());
-        }*/
         if (null == interviewer || null == cardId) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
