@@ -28,9 +28,9 @@ public class PublicSecurityDataReporter implements Runnable, IDataReporter {
     @Override
     public void report() {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("CardID", StrKit.isBlank(interviewer.getIdNumCode()) ? "102abad676fc42e1" : interviewer.getIdNumCode());
-        jsonObject.put("Build", StrKit.isBlank(interviewer.getBuildingUnit()) ? "05栋1单元" : interviewer.getBuildingUnit());
-        jsonObject.put("Community", StrKit.isBlank(interviewer.getRoom()) ? "光谷理想城" : interviewer.getRoom());
+        jsonObject.put("CardID", StrKit.isBlank(interviewer.getIdNumCode()) ? "" : interviewer.getIdNumCode());
+        jsonObject.put("Build", StrKit.isBlank(interviewer.getBuildingUnit()) ? "" : interviewer.getBuildingUnit());
+        jsonObject.put("Community", StrKit.isBlank(interviewer.getRoom()) ? "" : interviewer.getRoom());
         jsonObject.put("Name", StrKit.isBlank(interviewer.getName()) ? "" : interviewer.getName());
         jsonObject.put("Phone", StrKit.isBlank(interviewer.getTel()) ? "" : interviewer.getTel());
         jsonObject.put("PersonID", StrKit.isBlank(interviewer.getIdNum()) ? "" : interviewer.getIdNum());

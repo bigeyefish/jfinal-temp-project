@@ -13,6 +13,10 @@ public class ResourceHandler extends Handler {
     public void handle(String target, HttpServletRequest request, HttpServletResponse response, boolean[] isHandled) {
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
-        next.handle(target, request, response, isHandled);
+        if (request.getMethod().equalsIgnoreCase("options")) {
+            response.addHeader("Access-Control-Allow-Headers", "tokenId,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range");
+        } else {
+            next.handle(target, request, response, isHandled);
+        }
     }
 }
