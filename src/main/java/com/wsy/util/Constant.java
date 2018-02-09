@@ -24,6 +24,7 @@ public class Constant {
         public static final int TEL_NOT_EXIST = 1008;
         public static final int VERIFY_CODE_ERR = 1009;
         public static final int LEAK_USER_ID = 1010;
+        public static final int SECUR_VALID_FAILD = 1011;
     }
 
     static {
@@ -39,5 +40,6 @@ public class Constant {
         codeMap.put(ResultCode.TEL_NOT_EXIST, "手机号码不存在");
         codeMap.put(ResultCode.VERIFY_CODE_ERR, "短信验证码错误");
         codeMap.put(ResultCode.LEAK_USER_ID, "缺少userId字段或用户id不存在");
+        codeMap.put(ResultCode.SECUR_VALID_FAILD, "授权校验失败");
     }
 }

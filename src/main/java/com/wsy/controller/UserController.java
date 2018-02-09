@@ -64,8 +64,8 @@ public class UserController extends Controller{
     public void resetPassword() {
         String tel = getPara("tel");
         String newPass = getPara("newPass");
-        String verifyCode = getPara("verifyCode");
-        renderJson(userService.resetPassword(tel, newPass, verifyCode));
+        String token = getPara("token");
+        renderJson(userService.resetPassword(tel, newPass, token));
     }
 
     /**
@@ -74,6 +74,6 @@ public class UserController extends Controller{
     @Clear({AuthInterceptor.class, GET.class})
     @Before(POST.class)
     public void regist() {
-        renderJson(userService.addUser(getBean(User.class), getPara("verifyCode")));
+        renderJson(userService.addUser(getBean(User.class), getPara("token")));
     }
 }

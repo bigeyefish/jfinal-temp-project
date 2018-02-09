@@ -28,7 +28,7 @@ public class InterviewController extends Controller {
     @Clear(GET.class)
     @Before(POST.class)
     public void checkInCard() {
-        renderJson(interviewService.checkInCard(getPara("data"), getParaToInt("userId")));
+        renderJson(interviewService.checkInCard(getBean(Interviewer.class), getPara("cardId"), getParaToInt("userId")));
     }
 
     /**

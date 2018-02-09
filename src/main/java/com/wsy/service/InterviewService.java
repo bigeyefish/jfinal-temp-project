@@ -1,6 +1,5 @@
 package com.wsy.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.kit.Base64Kit;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.PropKit;
@@ -8,7 +7,10 @@ import com.jfinal.kit.StrKit;
 import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
 import com.wsy.service.dataReport.PublicSecurityDataReporter;
-import com.wsy.util.*;
+import com.wsy.util.Constant;
+import com.wsy.util.FalconsUtil;
+import com.wsy.util.LogUtil;
+import com.wsy.util.ResultFactory;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -22,10 +24,13 @@ public class InterviewService {
 
     /**
      * 电子卡包登记访客
-     * @param jsonStr
+     * @param interviewer
+     * @param cardId
+     * @param userId
      * @return
      */
-    public Result checkInCard(String jsonStr, int userId) {
+    public Result checkInCard(Interviewer interviewer, String cardId, int userId) {
+        /*
         if (null == jsonStr) {
             return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
         }
@@ -52,6 +57,24 @@ public class InterviewService {
             new Thread(new PublicSecurityDataReporter(interviewer)).start();
 
             return ResultFactory.success(jsonObj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultFactory.error(e.getMessage());
+        }*/
+        if (null == interviewer || null == cardId) {
+            return ResultFactory.createResult(Constant.ResultCode.LEAK_PARAM, null);
+        }
+        interviewer.setIdNumCode(cardId);
+        interviewer.setCreateTime(new Date());
+        interviewer.setCreateBy(userId);
+        try {
+            // 存储数据库
+            interviewer.save();
+
+            // idNumCode推送
+            new Thread(new PublicSecurityDataReporter(interviewer)).start();
+
+            return ResultFactory.success(null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResultFactory.error(e.getMessage());
