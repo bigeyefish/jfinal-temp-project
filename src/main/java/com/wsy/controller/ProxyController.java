@@ -67,11 +67,11 @@ public class ProxyController extends Controller {
                 }
             } else if (tokenId.equals("4c8c3f01550a4124928a2dcce746e7cd") || tokenId.equals("a1b3614b83df45deb54fce3ed7f8e038")) {
                 // 重置密码 或 注册用户
-                if (!SmsUtil.verifySms(getPara("user.tel"), getPara("verifyCode"))){
+                if (!SmsUtil.verifySms(getPara("user.tel", getPara("tel")), getPara("verifyCode"))){
                     renderJson(ResultFactory.createResult(Constant.ResultCode.VERIFY_CODE_ERR, null));
                     return;
                 }
-                jsonObject.put("token", Md5Crypt.apr1Crypt(getPara("user.tel"), PropKit.get("authority.md5;key")));
+                jsonObject.put("token", Md5Crypt.apr1Crypt(getPara("user.tel", getPara("tel")), PropKit.get("authority.md5;key")));
             }
             Map<String, String[]> paraMap = getParaMap();
             for (String key : paraMap.keySet()) {
