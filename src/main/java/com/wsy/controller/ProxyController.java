@@ -7,8 +7,12 @@ import com.jfinal.ext.interceptor.GET;
 import com.jfinal.kit.PropKit;
 import com.wsy.util.*;
 import org.apache.commons.codec.digest.Md5Crypt;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +40,7 @@ public class ProxyController extends Controller {
             }
         }  else {
             String tokenId = getHeader("tokenId");
-            JSONObject jsonObject = new JSONObject();
+            List<NameValuePair> data = new ArrayList<>();
 
             if (tokenId.equals("50bda8bca3b543a59840f2dfdb8b498c")) {
                 // 发送验证码
@@ -71,17 +75,16 @@ public class ProxyController extends Controller {
                     renderJson(ResultFactory.createResult(Constant.ResultCode.VERIFY_CODE_ERR, null));
                     return;
                 }
-                jsonObject.put("token", Md5Crypt.apr1Crypt(getPara("user.tel", getPara("tel")), PropKit.get("authority.md5;key")));
+                data.add(new BasicNameValuePair("token", Md5Crypt.apr1Crypt(getPara("user.tel", getPara("tel")), PropKit.get("authority.md5;key"))));
             }
             Map<String, String[]> paraMap = getParaMap();
             for (String key : paraMap.keySet()) {
                 if (!key.equals("verifyCode")) {
-                    jsonObject.put(key, paraMap.get(key)[0]);
+                    data.add(new BasicNameValuePair(key, paraMap.get(key)[0]));
                 }
             }
             try {
-                System.out.println(jsonObject.toString());
-                renderJson(HttpUtil.postJson(PropKit.get("remote.server.biz"), jsonObject, getHeader("tokenId")));
+                renderJson(HttpUtil.postJson(PropKit.get("remote.server.biz"), data, getHeader("tokenId"), "application/x-www-form-urlencoded"));
             } catch (IOException e) {
                 e.printStackTrace();
                 renderJson(ResultFactory.error("中转程序请求服务异常["+ e.getMessage() +"]"));
