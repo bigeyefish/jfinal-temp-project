@@ -54,10 +54,10 @@ public class FalconsUtil {
             if (null != jsonObject.get("code")) {
                 return new Result(Integer.parseInt((String)jsonObject.get("code")), (String)jsonObject.get("message"), null);
             }
-            return ResultFactory.error(null);
+            return ResultFactory.error(result);
         } catch (IOException e) {
             e.printStackTrace();
-            return ResultFactory.error(null);
+            return ResultFactory.error(e.getMessage());
         }
     }
 }
