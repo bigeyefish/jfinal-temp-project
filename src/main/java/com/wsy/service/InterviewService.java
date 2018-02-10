@@ -1,8 +1,5 @@
 package com.wsy.service;
 
-import com.jfinal.kit.Base64Kit;
-import com.jfinal.kit.PathKit;
-import com.jfinal.kit.PropKit;
 import com.jfinal.kit.StrKit;
 import com.wsy.model.Interviewer;
 import com.wsy.model.biz.Result;
@@ -12,10 +9,7 @@ import com.wsy.util.FalconsUtil;
 import com.wsy.util.LogUtil;
 import com.wsy.util.ResultFactory;
 
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by sanyihwang on 2017/11/6.
@@ -64,16 +58,17 @@ public class InterviewService {
         interviewer.setIdNumCode(cardId);
         interviewer.setCreateTime(new Date());
         interviewer.setCreateBy(userId);
+        interviewer.setPortrait(imgBase64);
         try {
             // 保存头像
-            String path = PropKit.get("path.portrait") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
-            OutputStream out = new FileOutputStream(PathKit.getWebRootPath() + path);
-            out.write(Base64Kit.decode(imgBase64));
-            out.flush();
-            out.close();
+            //String path = PropKit.get("path.portrait") + "/" + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
+            //OutputStream out = new FileOutputStream(PathKit.getWebRootPath() + path);
+            //out.write(Base64Kit.decode(imgBase64));
+            //out.flush();
+            //out.close();
 
             // 存储数据库
-            interviewer.setPortrait(path);
+            //interviewer.setPortrait(path);
             interviewer.save();
             // 调用猎鹰平台
             Result result = FalconsUtil.reportData(interviewer, imgBase64);
